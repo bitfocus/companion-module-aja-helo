@@ -37,7 +37,7 @@ instance.prototype.config_fields = function () {
 			id:    'info',
 			width: 12,
 			label: 'Information',
-			value: 'Recording and streaming profiles are 1-10.'
+			value: 'This module controls an AJA HELO appliance.  <a href="https://www.aja.com/products/helo#support" target="_new">HELO Support</a>'
 		},
 		{
 			type:  'textinput',
