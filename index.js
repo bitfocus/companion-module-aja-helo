@@ -117,7 +117,7 @@ instance.prototype.actions = function(system) {
 
 instance.prototype.action = function(action) {
 	var self = this;
-	var cmd
+	var cmd;
 	debug('action: ', action);
 
 	switch (action.action) {
@@ -155,9 +155,8 @@ instance.prototype.action = function(action) {
 		if (cmd !== undefined) {
 			self.system.emit('rest_get', 'http://' + self.config.host + '/' + cmd,function (err, data, response) {
 				if (err) {
-					self.log('Error from AJA: ' + response);
+					self.log('error', 'message');
 					return;
-					console.log('Result from REST: ', + response);
 				}
 			});
 		}
