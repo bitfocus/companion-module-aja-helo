@@ -155,7 +155,7 @@ instance.prototype.action = function(action) {
 		if (cmd !== undefined) {
 			self.system.emit('rest_get', 'http://' + self.config.host + '/' + cmd,function (err, data, response) {
 				if (err) {
-					self.log('error', 'message');
+					self.log('error', 'Error from AJA: ' + response);
 					return;
 				}
 			});
