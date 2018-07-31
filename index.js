@@ -165,7 +165,7 @@ instance.prototype.action = function(action) {
 
 instance.module_info = {
 	label: 'AJA HELO',
-	id: 'helo',
+	id: 'aja-helo',
 	version: '0.0.1'
 };
 
