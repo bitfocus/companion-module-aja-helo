@@ -1,6 +1,6 @@
 {
   "name": "aja-helo",
-  "version": "0.0.1",
+  "version": "1.2.0",
   "description": "Remote control of AJA's HELO recording and streaming appliance.",
   "main": "index.js",
   "scripts": {
