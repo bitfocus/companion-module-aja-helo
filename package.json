@@ -1,9 +1,9 @@
 {
   "name": "aja-helo",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "api_version": "1.0.0",
   "author": "Casey Selph <cxselph@gmail.com>",
-  "keywords": [ "Stream", "Encode" ],
+  "keywords": [ "Stream", "Encode", "Recording" ],
   "manufacturer": "AJA",
   "product": "HELO",
   "shortname": "helo",

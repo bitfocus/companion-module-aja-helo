@@ -2,6 +2,24 @@ var instance_skel = require('../../instance_skel');
 var debug;
 var log;
 
+function addZero(i) {
+	if (i < 10) {
+		i = "0" + i;
+	}
+	return i;
+}
+
+function renameTimestamp() {
+	var d          = new Date();
+	var curr_date  = addZero(d.getDate());
+	var curr_month = addZero(d.getMonth()+1);
+	var curr_year  = addZero(d.getFullYear());
+	var h          = addZero(d.getHours());
+	var m          = addZero(d.getMinutes());
+	var stamp      = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
+	return stamp;
+};
+
 function instance(system, id, config) {
 	var self = this;
 
@@ -634,6 +652,9 @@ instance.prototype.actions = function(system) {
 				}
 			]
 		},
+		'renameFileTs': {
+			label: 'Rename File - Timestamp'
+		},
 	});
 }
 
@@ -657,6 +678,10 @@ instance.prototype.action = function(action) {
 			cmd += 'FilenamePrefix&value=' + action.options.fileName;
 			break;
 
+		case 'renameFileTs':
+			var timeStamp = renameTimestamp();
+			cmd += 'FilenamePrefix&value=' + timeStamp;
+			break;
 	}
 
 		if (cmd !== undefined) {
