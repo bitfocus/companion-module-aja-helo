@@ -1,17 +1,21 @@
 {
-  "name": "aja-helo",
-  "version": "1.0.1",
-  "api_version": "1.0.0",
-  "author": "Casey Selph <cxselph@gmail.com>",
-  "keywords": [ "Stream", "Encode", "Recording" ],
-  "manufacturer": "AJA",
-  "product": "HELO",
-  "shortname": "helo",
-  "homepage": "https://www.aja.com/products/helo",
-  "description": "Remote control of AJA's HELO recording and streaming appliance.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "license": "ISC"
+	"name": "aja-helo",
+	"version": "1.0.2",
+	"api_version": "1.0.0",
+	"keywords": [
+		"Stream",
+		"Encode",
+		"Recording"
+	],
+	"manufacturer": "AJA",
+	"product": "HELO",
+	"shortname": "helo",
+	"homepage": "https://www.aja.com/products/helo",
+	"description": "Remote control of AJA's HELO recording and streaming appliance.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Casey Selph <cxselph@gmail.com>",
+	"license": "MIT"
 }
