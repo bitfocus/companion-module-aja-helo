@@ -10,12 +10,19 @@
 	"manufacturer": "AJA",
 	"product": "HELO",
 	"shortname": "helo",
-	"homepage": "https://www.aja.com/products/helo",
+	"homepage": "https://github.com/bitfocus/companion-module-aja-helo#readme",
 	"description": "Remote control of AJA's HELO recording and streaming appliance.",
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"author": "Casey Selph <cxselph@gmail.com>",
-	"license": "MIT"
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/bitfocus/companion-module-aja-helo/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/bitfocus/companion-module-aja-helo.git"
+	}
 }
