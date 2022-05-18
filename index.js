@@ -10,48 +10,51 @@ function addZero(i) {
 }
 
 function renameTimestamp() {
-	var d          = new Date();
-	var curr_date  = addZero(d.getDate());
-	var curr_month = addZero(d.getMonth()+1);
-	var curr_year  = addZero(d.getFullYear());
-	var h          = addZero(d.getHours());
-	var m          = addZero(d.getMinutes());
-	var stamp      = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
+	let d          = new Date();
+	let curr_date  = addZero(d.getDate());
+	let curr_month = addZero(d.getMonth()+1);
+	let curr_year  = addZero(d.getFullYear());
+	let h          = addZero(d.getHours());
+	let m          = addZero(d.getMinutes());
+	let stamp      = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
 	return stamp;
 };
 
 function instance(system, id, config) {
-	var self = this;
+	let self = this;
 
 	// super-constructor
 	instance_skel.apply(this, arguments);
 
-	self.actions(); // export actions
-	self.init_presets();
-
 	return self;
 }
 
-
-instance.prototype.updateConfig = function(config) {
-	var self = this;
-	self.init_presets();
-
-	self.config = config;
-};
 instance.prototype.init = function() {
-	var self = this;
+	let self = this;
 
 	self.status(self.STATE_OK);
+
+	self.init_actions();
 	self.init_presets();
 
 	debug = self.debug;
 	log   = self.log;
 };
 
+instance.prototype.updateConfig = function(config) {
+	let self = this;
+
+	self.status(self.STATE_OK);
+
+	self.init_actions();
+	self.init_presets();
+
+	self.config = config;
+};
+
 // Return config fields for web config
 instance.prototype.config_fields = function () {
-	var self = this;
+	let self = this;
 	return [
 		{
 			type:  'text',
@@ -67,105 +70,116 @@ instance.prototype.config_fields = function () {
 			width: 8,
 			regex: self.REGEX_IP
 		},
+		{
+			type: 'dropdown',
+			id: 'model',
+			label: 'Model',
+			default: 'classic',
+			choices: [
+				{ id: 'classic', label: 'Classic'},
+				{ id: 'plus', label: 'Plus'}
+			]
+		}
 	]
 };
 
 // When module gets deleted
 instance.prototype.destroy = function() {
-	var self = this;
+	let self = this;
 	debug("destroy");
 };
 
 instance.prototype.init_presets = function () {
-	var self = this;
-	var presets = [];
+	let self = this;
+	let presets = [];
 
-		presets.push({
-			category: 'Commands',
-			label: 'Start Record',
-			bank: {
-				style: 'text',
-				text: 'START RECORD',
-				size: '14',
-				color: '16777215',
-				bgcolor: 52224
-			},
-			actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=1'
-					}
+	presets.push({
+		category: 'Commands',
+		label: 'Start Record',
+		bank: {
+			style: 'text',
+			text: 'START RECORD',
+			size: '14',
+			color: '16777215',
+			bgcolor: 52224
+		},
+		actions: [
+			{
+				action: 'startStop',
+				options: {
+					command: 'ReplicatorCommand&value=1'
 				}
-			]
-		});
+			}
+		]
+	});
 
-		presets.push({
-			category: 'Commands',
-			label: 'Stop Record',
-			bank: {
-				style: 'text',
-				text: 'STOP RECORD',
-				size: '14',
-				color: '16777215',
-				bgcolor: 16711680
-			},
-			actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=2'
-					}
+	presets.push({
+		category: 'Commands',
+		label: 'Stop Record',
+		bank: {
+			style: 'text',
+			text: 'STOP RECORD',
+			size: '14',
+			color: '16777215',
+			bgcolor: 16711680
+		},
+		actions: [
+			{
+				action: 'startStop',
+				options: {
+					command: 'ReplicatorCommand&value=2'
 				}
-			]
-		});
+			}
+		]
+	});
 
-		presets.push({
-			category: 'Commands',
-			label: 'Start Stream',
-			bank: {
-				style: 'text',
-				text: 'START STREAM',
-				size: '14',
-				color: '16777215',
-				bgcolor: 52224
-			},
-			actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=3'
-					}
+	presets.push({
+		category: 'Commands',
+		label: 'Start Stream',
+		bank: {
+			style: 'text',
+			text: 'START STREAM',
+			size: '14',
+			color: '16777215',
+			bgcolor: 52224
+		},
+		actions: [
+			{
+				action: 'startStop',
+				options: {
+					command: 'ReplicatorCommand&value=3'
 				}
-			]
-		});
+			}
+		]
+	});
 
-		presets.push({
-			category: 'Commands',
-			label: 'Stop Stream',
-			bank: {
-				style: 'text',
-				text: 'STOP STREAM',
-				size: '14',
-				color: '16777215',
-				bgcolor: 16711680
-			},
-			actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=4'
-					}
+	presets.push({
+		category: 'Commands',
+		label: 'Stop Stream',
+		bank: {
+			style: 'text',
+			text: 'STOP STREAM',
+			size: '14',
+			color: '16777215',
+			bgcolor: 16711680
+		},
+		actions: [
+			{
+				action: 'startStop',
+				options: {
+					command: 'ReplicatorCommand&value=4'
 				}
-			]
-		});
+			}
+		]
+	});
 
+	for (let i = 1; i <= 10; i++) {
 		presets.push({
 			category: 'Record Profiles',
-			label: 'Record Profile 1',
+			label: 'Record Profile ' + i,
 			bank: {
 				style: 'text',
-				text: 'RECORD\\nPROFILE\\n1',
+				text: 'RECORD\\nPROFILE\\n' + i,
 				size: '14',
 				color: '16777215',
 				bgcolor: 0
@@ -175,207 +189,20 @@ instance.prototype.init_presets = function () {
 					action: 'setProfile',
 					options: {
 						profileType: 'RecordingProfileSel&value=',
-						profileNum: 0
+						profileNum: (i-1)
 					}
 				}
 			]
 		});
+	}
 
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 2',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n2',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 1
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 3',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n3',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 2
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 4',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n4',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 3
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 5',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n5',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 4
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 6',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n6',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 5
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 7',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n7',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 6
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 8',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n8',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 7
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 9',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n9',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 8
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile 10',
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n10',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: 9
-					}
-				}
-			]
-		});
-
+	for (let i = 1; i <= 10; i++) {
 		presets.push({
 			category: 'Stream Profiles',
-			label: 'Stream Profile 1',
+			label: 'Stream Profile ' + i,
 			bank: {
 				style: 'text',
-				text: 'STREAM\\nPROFILE\\n1',
+				text: 'STREAM\\nPROFILE\\n' + i,
 				size: '14',
 				color: '16777215',
 				bgcolor: 0
@@ -385,314 +212,283 @@ instance.prototype.init_presets = function () {
 					action: 'setProfile',
 					options: {
 						profileType: 'StreamingProfileSel&value=',
-						profileNum: 0
+						profileNum: (i-1)
 					}
 				}
 			]
 		});
+	}
 
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 2',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n2',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 1
+	if (self.config.model == 'plus') {
+		for (let i = 1; i <= 10; i++) {
+			presets.push({
+				category: 'Layouts',
+				label: 'Select Layout ' + i,
+				bank: {
+					style: 'text',
+					text: 'SELECT\\nLAYOUT\\n' + i,
+					size: '14',
+					color: '16777215',
+					bgcolor: 0
+				},
+				actions: [
+					{
+						action: 'selectLayout',
+						options: {
+							layout: i,
+						}
 					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 3',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n3',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 2
+				]
+			});
+	
+			presets.push({
+				category: 'Layouts',
+				label: 'Recall Layout ' + i,
+				bank: {
+					style: 'text',
+					text: 'RECALL\\nLAYOUT\\n' + i,
+					size: '14',
+					color: '16777215',
+					bgcolor: 0
+				},
+				actions: [
+					{
+						action: 'selectLayoutAndDo',
+						options: {
+							layout: i,
+							action: '1'
+						}
 					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 4',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n4',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 3
+				]
+			});
+	
+			presets.push({
+				category: 'Layouts',
+				label: 'Store Layout ' + i,
+				bank: {
+					style: 'text',
+					text: 'STORE\\nLAYOUT\\n' + i,
+					size: '14',
+					color: '16777215',
+					bgcolor: 0
+				},
+				actions: [
+					{
+						action: 'selectLayoutAndDo',
+						options: {
+							layout: i,
+							action: '2'
+						}
 					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 5',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n5',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 4
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 6',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n6',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 5
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 7',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n7',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 6
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 8',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n8',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 7
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 9',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n9',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 8
-					}
-				}
-			]
-		});
-
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile 10',
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n10',
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: 9
-					}
-				}
-			]
-		});
+				]
+			});
+		}
+	}	
 
 	self.setPresetDefinitions(presets);
 }
 
-instance.prototype.actions = function(system) {
-	var self = this;
-	self.setActions({
+instance.prototype.init_actions = function(system) {
+	let self = this;
 
-		'startStop':    {
-			label: 'Choose Commands',
-			options: [
-					{
-						type:    'dropdown',
-						label:   'Choose Command',
-						id:      'command',
-						width:   12,
-						default: 'ReplicatorCommand&value=1',
-						choices:	[
-							{ id: 'ReplicatorCommand&value=1',		label: 'Start Record' },
-							{ id: 'ReplicatorCommand&value=2',		label: 'Stop Record' },
-							{ id: 'ReplicatorCommand&value=3',		label: 'Start Stream' },
-							{ id: 'ReplicatorCommand&value=4',		label: 'Stop Stream' },
-						]
-					},
-			]
-		},
+	let actionsArr = {};
 
-		'setProfile':    {
-			label: 'Choose Profiles',
-			options: [
-					{
-						type:    'dropdown',
-						label:   'Set Profile',
-						id:      'profileType',
-						width:   12,
-						default: 'RecordingProfileSel&value=',
-						choices:	[
-							{ id: 'RecordingProfileSel&value=',		label: 'Record Profile' },
-							{ id: 'StreamingProfileSel&value=',		label: 'Stream Profile' }
-						]
-					},
-					{
-						type:   'dropdown',
-						label:  'Choose Profile 1-10',
-						id:     'profileNum',
-						width:  12,
-						default: '0',
-						choices:	[
-							{ id: '0',		label: '1' },
-							{ id: '1',		label: '2' },
-							{ id: '2',		label: '3' },
-							{ id: '3',		label: '4' },
-							{ id: '4',		label: '5' },
-							{ id: '5',		label: '6' },
-							{ id: '6',		label: '7' },
-							{ id: '7',		label: '8' },
-							{ id: '8',		label: '9' },
-							{ id: '9',		label: '10' }
-						]
-					},
-			]
-		},
+	actionsArr.startStop = {
+		label: 'Choose Commands',
+		options: [
+			{
+				type:    'dropdown',
+				label:   'Choose Command',
+				id:      'command',
+				width:   12,
+				default: 'ReplicatorCommand&value=1',
+				choices:	[
+					{ id: 'ReplicatorCommand&value=1',		label: 'Start Record' },
+					{ id: 'ReplicatorCommand&value=2',		label: 'Stop Record' },
+					{ id: 'ReplicatorCommand&value=3',		label: 'Start Stream' },
+					{ id: 'ReplicatorCommand&value=4',		label: 'Stop Stream' },
+				]
+			},
+		],
+		callback: function(action, bank) {
+			let cmd = action.options.command;
+			self.sendCommand(cmd);
+		}
+	};
 
-		'renameFile': {
-			label: 'Rename File',
+	actionsArr.setProfile = {
+		label: 'Choose Profiles',
+		options: [
+			{
+				type:    'dropdown',
+				label:   'Set Profile',
+				id:      'profileType',
+				width:   12,
+				default: 'RecordingProfileSel&value=',
+				choices:	[
+					{ id: 'RecordingProfileSel&value=',		label: 'Record Profile' },
+					{ id: 'StreamingProfileSel&value=',		label: 'Stream Profile' }
+				]
+			},
+			{
+				type:   'dropdown',
+				label:  'Choose Profile 1-10',
+				id:     'profileNum',
+				width:  12,
+				default: '0',
+				choices:	[
+					{ id: '0',		label: '1' },
+					{ id: '1',		label: '2' },
+					{ id: '2',		label: '3' },
+					{ id: '3',		label: '4' },
+					{ id: '4',		label: '5' },
+					{ id: '5',		label: '6' },
+					{ id: '6',		label: '7' },
+					{ id: '7',		label: '8' },
+					{ id: '8',		label: '9' },
+					{ id: '9',		label: '10' }
+				]
+			},
+		],
+		callback: function(action, bank) {
+			let cmd = action.options.profileType + action.options.profileNum;
+			self.sendCommand(cmd);
+		}
+	};
+
+	actionsArr.renameFile = {
+		label: 'Rename File',
+		options: [
+			{
+					type:    'textinput',
+					label:   'file name',
+					id:      'fileName'
+			}
+		],
+		callback: function(action, bank) {
+			let cmd = 'FilenamePrefix&value=' + action.options.fileName;
+			self.sendCommand(cmd);
+		}
+	};
+
+	actionsArr.renameFileTs = {
+		label: 'Rename File - Timestamp',
+		callback: function(action, bank) {
+			let timeStamp = renameTimestamp();
+			let cmd = 'FilenamePrefix&value=' + timeStamp;
+			self.sendCommand(cmd);
+		}
+	};
+
+	console.log('self.config.modle: ' + self.config.model)
+
+	if (self.config.model == 'plus') {
+		//add the plus specific commands
+
+		actionsArr.selectLayout = {
+			label: 'Select Layout',
 			options: [
 				{
-					 type:    'textinput',
-					 label:   'file name',
-					 id:      'fileName'
+					label: 'Layout',
+					type: 'dropdown',
+					id: 'layout',
+					default: 1,
+					choices: [
+						{ id: 1, label: 'Layout 1'},
+						{ id: 2, label: 'Layout 2'},
+						{ id: 3, label: 'Layout 3'},
+						{ id: 4, label: 'Layout 4'},
+						{ id: 5, label: 'Layout 5'},
+						{ id: 6, label: 'Layout 6'},
+						{ id: 7, label: 'Layout 7'},
+						{ id: 8, label: 'Layout 8'},
+						{ id: 9, label: 'Layout 9'},
+						{ id: 10, label: 'Layout 10'}
+					]
 				}
-			]
-		},
-		'renameFileTs': {
-			label: 'Rename File - Timestamp'
-		},
-	});
-}
+			],
+			callback: function (action, bank) {
+				let cmd = 'LayoutSelector&value=' + action.options.layout;
+				self.sendCommand(cmd);
+			}
+		};
 
-instance.prototype.action = function(action) {
-	var self = this;
-	var cmd  = 'config?action=set&paramid=eParamID_';
-	var opt  = action.options;
-	debug('action: ', action);
+		actionsArr.selectLayoutAndDo = {
+			label: 'Select Layout and Recall/Store/Load Template',
+			options: [
+				{
+					label: 'Layout',
+					type: 'dropdown',
+					id: 'layout',
+					default: 1,
+					choices: [
+						{ id: 1, label: 'Layout 1'},
+						{ id: 2, label: 'Layout 2'},
+						{ id: 3, label: 'Layout 3'},
+						{ id: 4, label: 'Layout 4'},
+						{ id: 5, label: 'Layout 5'},
+						{ id: 6, label: 'Layout 6'},
+						{ id: 7, label: 'Layout 7'},
+						{ id: 8, label: 'Layout 8'},
+						{ id: 9, label: 'Layout 9'},
+						{ id: 10, label: 'Layout 10'}
+					]
+				},
+				{
+					label: 'Action',
+					type: 'dropdown',
+					id: 'action',
+					default: '1',
+					choices: [
+						{ id: '0', label: 'None'},
+						{ id: '1', label: 'Recall'},
+						{ id: '2', label: 'Store'},
+						{ id: '3', label: 'Template'},
+					]
+				}
+			],
+			callback: function (action, bank) {
+				let cmd = 'LayoutSelector&value=' + action.options.layout;
+				self.sendCommand(cmd);
+				setTimeout(function () {
+					self.sendCommand('LayoutCommand&value=' + action.options.action);
+				}, 500);
+			}
+		};
 
-	switch (action.action) {
+		actionsArr.recallSelectedLayout = {
+			label: 'Recall Selected Layout',
+			callback: function (action, bank) {
+				let cmd = 'LayoutCommand&value=1';
+				self.sendCommand(cmd);
+			}
+		};
 
-		case 'startStop':
-			cmd += action.options.command;
-			break;
-
-		case 'setProfile':
-			cmd += action.options.profileType + action.options.profileNum;
-			break;
-
-		case 'renameFile':
-			cmd += 'FilenamePrefix&value=' + action.options.fileName;
-			break;
-
-		case 'renameFileTs':
-			var timeStamp = renameTimestamp();
-			cmd += 'FilenamePrefix&value=' + timeStamp;
-			break;
+		actionsArr.storeSelectedLayout = {
+			label: 'Store Selected Layout',
+			callback: function (action, bank) {
+				let cmd = 'LayoutCommand&value=2';
+				self.sendCommand(cmd);
+			}
+		};
 	}
 
-		if (cmd !== undefined) {
-			self.system.emit('rest_get', 'http://' + self.config.host + '/' + cmd,function (err, data, response) {
-				if (err) {
-					self.log('error', 'Error from AJA: ' + response);
-					return;
-				}
-			});
-		}
+	self.setActions(actionsArr);
+}
 
+instance.prototype.sendCommand = function(cmd) {
+	let self = this;
+
+	let prefix = 'config?action=set&paramid=eParamID_';
+
+	if (cmd !== undefined) {
+		self.system.emit('rest_get', 'http://' + self.config.host + '/' + prefix + cmd,function (err, data, response) {
+			if (err) {
+				self.log('error', 'Error from AJA: ' + response);
+				return;
+			}
+		});
+	}
 };
 
 instance_skel.extendedBy(instance);
