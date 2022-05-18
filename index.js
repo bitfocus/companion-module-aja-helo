@@ -46,10 +46,10 @@ instance.prototype.updateConfig = function(config) {
 
 	self.status(self.STATE_OK);
 
+	self.config = config;
+
 	self.init_actions();
 	self.init_presets();
-
-	self.config = config;
 };
 
 // Return config fields for web config
@@ -173,50 +173,52 @@ instance.prototype.init_presets = function () {
 		]
 	});
 
-	for (let i = 1; i <= 10; i++) {
-		presets.push({
-			category: 'Record Profiles',
-			label: 'Record Profile ' + i,
-			bank: {
-				style: 'text',
-				text: 'RECORD\\nPROFILE\\n' + i,
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'RecordingProfileSel&value=',
-						profileNum: (i-1)
+	if ((self.config.model == 'classic') || (self.config.model == undefined)) {
+		for (let i = 1; i <= 10; i++) {
+			presets.push({
+				category: 'Record Profiles',
+				label: 'Record Profile ' + i,
+				bank: {
+					style: 'text',
+					text: 'RECORD\\nPROFILE\\n' + i,
+					size: '14',
+					color: '16777215',
+					bgcolor: 0
+				},
+				actions: [
+					{
+						action: 'setProfile',
+						options: {
+							profileType: 'RecordingProfileSel&value=',
+							profileNum: (i-1)
+						}
 					}
-				}
-			]
-		});
-	}
-
-	for (let i = 1; i <= 10; i++) {
-		presets.push({
-			category: 'Stream Profiles',
-			label: 'Stream Profile ' + i,
-			bank: {
-				style: 'text',
-				text: 'STREAM\\nPROFILE\\n' + i,
-				size: '14',
-				color: '16777215',
-				bgcolor: 0
-			},
-			actions: [
-				{
-					action: 'setProfile',
-					options: {
-						profileType: 'StreamingProfileSel&value=',
-						profileNum: (i-1)
+				]
+			});
+		}
+	
+		for (let i = 1; i <= 10; i++) {
+			presets.push({
+				category: 'Stream Profiles',
+				label: 'Stream Profile ' + i,
+				bank: {
+					style: 'text',
+					text: 'STREAM\\nPROFILE\\n' + i,
+					size: '14',
+					color: '16777215',
+					bgcolor: 0
+				},
+				actions: [
+					{
+						action: 'setProfile',
+						options: {
+							profileType: 'StreamingProfileSel&value=',
+							profileNum: (i-1)
+						}
 					}
-				}
-			]
-		});
+				]
+			});
+		}
 	}
 
 	if (self.config.model == 'plus') {
@@ -316,45 +318,47 @@ instance.prototype.init_actions = function(system) {
 		}
 	};
 
-	actionsArr.setProfile = {
-		label: 'Choose Profiles',
-		options: [
-			{
-				type:    'dropdown',
-				label:   'Set Profile',
-				id:      'profileType',
-				width:   12,
-				default: 'RecordingProfileSel&value=',
-				choices:	[
-					{ id: 'RecordingProfileSel&value=',		label: 'Record Profile' },
-					{ id: 'StreamingProfileSel&value=',		label: 'Stream Profile' }
-				]
-			},
-			{
-				type:   'dropdown',
-				label:  'Choose Profile 1-10',
-				id:     'profileNum',
-				width:  12,
-				default: '0',
-				choices:	[
-					{ id: '0',		label: '1' },
-					{ id: '1',		label: '2' },
-					{ id: '2',		label: '3' },
-					{ id: '3',		label: '4' },
-					{ id: '4',		label: '5' },
-					{ id: '5',		label: '6' },
-					{ id: '6',		label: '7' },
-					{ id: '7',		label: '8' },
-					{ id: '8',		label: '9' },
-					{ id: '9',		label: '10' }
-				]
-			},
-		],
-		callback: function(action, bank) {
-			let cmd = action.options.profileType + action.options.profileNum;
-			self.sendCommand(cmd);
-		}
-	};
+	if ((self.config.model == 'classic') || (self.config.model == undefined)) {
+		actionsArr.setProfile = {
+			label: 'Choose Profiles',
+			options: [
+				{
+					type:    'dropdown',
+					label:   'Set Profile',
+					id:      'profileType',
+					width:   12,
+					default: 'RecordingProfileSel&value=',
+					choices:	[
+						{ id: 'RecordingProfileSel&value=',		label: 'Record Profile' },
+						{ id: 'StreamingProfileSel&value=',		label: 'Stream Profile' }
+					]
+				},
+				{
+					type:   'dropdown',
+					label:  'Choose Profile 1-10',
+					id:     'profileNum',
+					width:  12,
+					default: '0',
+					choices:	[
+						{ id: '0',		label: '1' },
+						{ id: '1',		label: '2' },
+						{ id: '2',		label: '3' },
+						{ id: '3',		label: '4' },
+						{ id: '4',		label: '5' },
+						{ id: '5',		label: '6' },
+						{ id: '6',		label: '7' },
+						{ id: '7',		label: '8' },
+						{ id: '8',		label: '9' },
+						{ id: '9',		label: '10' }
+					]
+				},
+			],
+			callback: function(action, bank) {
+				let cmd = action.options.profileType + action.options.profileNum;
+				self.sendCommand(cmd);
+			}
+		};
+	}
 
 	actionsArr.renameFile = {
 		label: 'Rename File',
@@ -380,11 +384,7 @@ instance.prototype.init_actions = function(system) {
 		}
 	};
 
-	console.log('self.config.modle: ' + self.config.model)
-
 	if (self.config.model == 'plus') {
-		//add the plus specific commands
-
 		actionsArr.selectLayout = {
 			label: 'Select Layout',
 			options: [
