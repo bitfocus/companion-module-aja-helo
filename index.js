@@ -264,7 +264,7 @@ instance.prototype.init_presets = function () {
 				]
 			});
 	
-			presets.push({
+			/*presets.push({
 				category: 'Layouts',
 				label: 'Store Layout ' + i,
 				bank: {
@@ -283,7 +283,7 @@ instance.prototype.init_presets = function () {
 						}
 					}
 				]
-			});
+			});*/
 		}
 	}	
 
@@ -317,6 +317,22 @@ instance.prototype.init_actions = function(system) {
 			self.sendCommand(cmd);
 		}
 	};
+
+	actionsArr.mute = {
+		label: 'Mute',
+		callback: function(action, bank) {
+			let cmd = 'AVMute&value=1';
+			self.sendCommand(cmd);
+		}
+	}
+
+	actionsArr.unmute = {
+		label: 'Unmute',
+		callback: function(action, bank) {
+			let cmd = 'AVMute&value=0';
+			self.sendCommand(cmd);
+		}
+	}
 
 	if ((self.config.model == 'classic') || (self.config.model == undefined)) {
 		actionsArr.setProfile = {
@@ -414,7 +430,7 @@ instance.prototype.init_actions = function(system) {
 		};
 
 		actionsArr.selectLayoutAndDo = {
-			label: 'Select Layout and Recall/Store/Load Template',
+			label: 'Select Layout and Recall/Load Template',
 			options: [
 				{
 					label: 'Layout',
@@ -442,17 +458,14 @@ instance.prototype.init_actions = function(system) {
 					choices: [
 						{ id: '0', label: 'None'},
 						{ id: '1', label: 'Recall'},
-						{ id: '2', label: 'Store'},
+						//{ id: '2', label: 'Store'},
 						{ id: '3', label: 'Template'},
 					]
 				}
 			],
 			callback: function (action, bank) {
-				let cmd = 'LayoutSelector&value=' + action.options.layout;
-				self.sendCommand(cmd);
-				setTimeout(function () {
-					self.sendCommand('LayoutCommand&value=' + action.options.action);
-				}, 500);
+				self.sendCommand('LayoutSelector&value=' + action.options.layout);
+				self.sendCommand('LayoutCommand&value=' + action.options.action);
 			}
 		};
 
@@ -464,13 +477,13 @@ instance.prototype.init_actions = function(system) {
 			}
 		};
 
-		actionsArr.storeSelectedLayout = {
+		/*actionsArr.storeSelectedLayout = {
 			label: 'Store Selected Layout',
 			callback: function (action, bank) {
 				let cmd = 'LayoutCommand&value=2';
 				self.sendCommand(cmd);
 			}
-		};
+		};*/
 	}
 
 	self.setActions(actionsArr);
