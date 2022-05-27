@@ -465,7 +465,10 @@ instance.prototype.init_actions = function(system) {
 			],
 			callback: function (action, bank) {
 				self.sendCommand('LayoutSelector&value=' + action.options.layout);
-				self.sendCommand('LayoutCommand&value=' + action.options.action);
+				//self.sendCommand('LayoutCommand&value=' + action.options.action);
+				setTimeout(function () {
+					self.sendCommand('LayoutCommand&value=' + action.options.action);
+				}, 20);
 			}
 		};
 
