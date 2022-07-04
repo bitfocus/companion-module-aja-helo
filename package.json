@@ -1,6 +1,6 @@
 {
 	"name": "aja-helo",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"api_version": "1.0.0",
 	"keywords": [
 		"Stream",
@@ -18,6 +18,9 @@
 	},
 	"author": "Casey Selph <cxselph@gmail.com>",
 	"license": "MIT",
+	"dependencies": {
+		"node-fetch": "^2.6.0"
+	},
 	"bugs": {
 		"url": "https://github.com/bitfocus/companion-module-aja-helo/issues"
 	},
