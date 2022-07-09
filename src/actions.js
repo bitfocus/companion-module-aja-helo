@@ -1,3 +1,5 @@
+const Helo = require('./Helo')
+
 module.exports = {
 	addZero(i) {
 		if (i < 10) {
@@ -8,16 +10,44 @@ module.exports = {
 
 	renameTimestamp() {
 		let d = new Date();
-		let curr_date = addZero(d.getDate());
-		let curr_month = addZero(d.getMonth() + 1);
-		let curr_year = addZero(d.getFullYear());
-		let h = addZero(d.getHours());
-		let m = addZero(d.getMinutes());
+		let curr_date = this.addZero(d.getDate());
+		let curr_month = this.addZero(d.getMonth() + 1);
+		let curr_year = this.addZero(d.getFullYear());
+		let h = this.addZero(d.getHours());
+		let m = this.addZero(d.getMinutes());
 		let stamp = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
 		return stamp;
 	},
 
+	sendCommand(cmd) {
+		let prefix = 'action=set&paramid=eParamID_';
+		if (cmd !== undefined) {
+			try {
+				const connection = new Helo(this.config)
+				const result = connection.sendRequest(prefix + cmd)
+				this.debug('info', result)
+
+				if (result.status === 'success') {
+					this.status(this.STATUS_OK)
+				} else {
+					this.status(this.STATUS_ERROR)
+				}
+			} catch (error) {
+				let errorText = String(error)
+				if (errorText.match('ECONNREFUSED')) {
+					this.log('error', 'Unable to connect to the streamer...')
+					this.status(this.STATUS_ERROR)
+				} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
+					this.log('error', 'Connection to streamer has timed out...')
+				} else {
+					this.log('error', 'An error has occurred when connecting to streamer...')
+				}
+			}
+		}
+	},
+
 	actions() {
+		let self = this; // required to have referenec to outer `this`
 		let actionsArr = {};
 
 		actionsArr.startStop = {
@@ -39,7 +69,7 @@ module.exports = {
 			],
 			callback: function (action, bank) {
 				let cmd = action.options.command;
-				this.sendCommand(cmd);
+				self.sendCommand(cmd);
 			}
 		};
 
@@ -47,7 +77,7 @@ module.exports = {
 			label: 'Mute',
 			callback: function (action, bank) {
 				let cmd = 'AVMute&value=1';
-				this.sendCommand(cmd);
+				self.sendCommand(cmd);
 			}
 		}
 
@@ -55,7 +85,7 @@ module.exports = {
 			label: 'Unmute',
 			callback: function (action, bank) {
 				let cmd = 'AVMute&value=0';
-				this.sendCommand(cmd);
+				self.sendCommand(cmd);
 			}
 		}
 
@@ -96,7 +126,7 @@ module.exports = {
 				],
 				callback: function (action, bank) {
 					let cmd = action.options.profileType + action.options.profileNum;
-					this.sendCommand(cmd);
+					self.sendCommand(cmd);
 				}
 			};
 		}
@@ -112,16 +142,16 @@ module.exports = {
 			],
 			callback: function (action, bank) {
 				let cmd = 'FilenamePrefix&value=' + action.options.fileName;
-				this.sendCommand(cmd);
+				self.sendCommand(cmd);
 			}
 		};
 
 		actionsArr.renameFileTs = {
 			label: 'Rename File - Timestamp',
 			callback: function (action, bank) {
-				let timeStamp = renameTimestamp();
+				let timeStamp = self.renameTimestamp();
 				let cmd = 'FilenamePrefix&value=' + timeStamp;
-				this.sendCommand(cmd);
+				self.sendCommand(cmd);
 			}
 		};
 
@@ -150,7 +180,7 @@ module.exports = {
 				],
 				callback: function (action, bank) {
 					let cmd = 'LayoutSelector&value=' + action.options.layout;
-					this.sendCommand(cmd);
+					self.sendCommand(cmd);
 				}
 			};
 
@@ -189,10 +219,10 @@ module.exports = {
 					}
 				],
 				callback: function (action, bank) {
-					this.sendCommand('LayoutSelector&value=' + action.options.layout);
-					//this.sendCommand('LayoutCommand&value=' + action.options.action);
+					self.sendCommand('LayoutSelector&value=' + action.options.layout);
+					//self.sendCommand('LayoutCommand&value=' + action.options.action);
 					setTimeout(function () {
-						this.sendCommand('LayoutCommand&value=' + action.options.action);
+						self.sendCommand('LayoutCommand&value=' + action.options.action);
 					}, 20);
 				}
 			};
@@ -201,7 +231,7 @@ module.exports = {
 				label: 'Recall Selected Layout',
 				callback: function (action, bank) {
 					let cmd = 'LayoutCommand&value=1';
-					this.sendCommand(cmd);
+					self.sendCommand(cmd);
 				}
 			};
 
@@ -209,7 +239,7 @@ module.exports = {
 				label: 'Store Selected Layout',
 				callback: function (action, bank) {
 					let cmd = 'LayoutCommand&value=2';
-					this.sendCommand(cmd);
+					self.sendCommand(cmd);
 				}
 			};*/
 		}

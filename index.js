@@ -1,7 +1,6 @@
 var InstanceSkel = require('../../instance_skel');
 const configFields = require('./src/configFields')
 const variables = require('./src/variables')
-const Helo = require('./src/Helo')
 const polling = require('./src/polling')
 const actions = require('./src/actions')
 const presets = require('./src/presets')
@@ -64,32 +63,6 @@ class HeloInstance extends InstanceSkel {
 		this.debug('destroy', this.id)
 	}
 
-	sendCommand(cmd) {
-		let prefix = 'action=set&paramid=eParamID_';
-		if (cmd !== undefined) {
-			try {
-				const connection = new Helo(this.config)
-				const result = connection.sendCommand(prefix + cmd)
-				this.debug('info', result)
-
-				if (result.status === 'success') {
-					this.status(this.STATUS_OK)
-				} else {
-					this.status(this.STATUS_ERROR)
-				}
-			} catch (error) {
-				let errorText = String(error)
-				if (errorText.match('ECONNREFUSED')) {
-					this.log('error', 'Unable to connect to the streamer...')
-					this.status(this.STATUS_ERROR)
-				} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
-					this.log('error', 'Connection to streamer has timed out...')
-				} else {
-					this.log('error', 'An error has occurred when connecting to streamer...')
-				}
-			}
-		}
-	}
 }
 
 module.exports = HeloInstance

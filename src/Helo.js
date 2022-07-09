@@ -13,7 +13,7 @@ class Helo {
 		}
 	}
 
-	async sendCommand(cmd) {
+	async sendRequest(cmd) {
 		let requestUrl = this.baseUrl + cmd
 
 		const response = await fetch(requestUrl, this.requestOptions)

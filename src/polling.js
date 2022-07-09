@@ -17,7 +17,7 @@ module.exports = {
 			const connection = new Helo(this.config)
 			this.pollingInterval = setInterval(async () => {
 				// Now get the record status
-				const resultRecord = await connection.sendCommand('action=get&paramid=eParamID_ReplicatorRecordState')
+				const resultRecord = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
 				this.debug('info', resultRecord)
 
 				if (resultRecord.status === 'failed') {
@@ -31,7 +31,7 @@ module.exports = {
 				this.setVariable('recorder_status', resultRecord.response.value_name)
 
 				// Now get the stream status
-				const resultStream = await connection.sendCommand('action=get&paramid=eParamID_ReplicatorStreamState')
+				const resultStream = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
 				this.debug('info', resultStream)
 
 				if (resultStream.status === 'failed') {
