@@ -29,6 +29,7 @@ module.exports = {
 
 				this.setVariable('recorder_status_value', resultRecord.response.value)
 				this.setVariable('recorder_status', resultRecord.response.value_name)
+				this.setVariable('recording_status', resultRecord.response.value == 2 ? true : false)
 
 				// Now get the stream status
 				const resultStream = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
@@ -43,6 +44,7 @@ module.exports = {
 
 				this.setVariable('stream_status_value', resultStream.response.value)
 				this.setVariable('stream_status', resultStream.response.value_name)
+				this.setVariable('streaming_status', resultStream.response.value == 2 ? true : false)
 
 			}, this.config.polling_rate)
 		}
