@@ -27,6 +27,18 @@ module.exports = {
 						command: 'ReplicatorCommand&value=1'
 					}
 				}
+			],
+			feedbacks: [
+				{
+					type: 'recordStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red
+					}
+				}
 			]
 		});
 
@@ -52,6 +64,47 @@ module.exports = {
 
 		presets.push({
 			category: 'Commands',
+			label: 'Helo Record',
+			bank: {
+				style: 'text',
+				text: 'HELO RECORD',
+				size: '14',
+				latch: true,
+				color: white,
+				bgcolor: green
+			},
+			actions: [
+				{
+					action: 'startStop',
+					options: {
+						command: 'ReplicatorCommand&value=1'
+					}
+				}
+			],
+			release_actions: [
+				{
+					action: 'startStop',
+					options: {
+						command: 'ReplicatorCommand&value=2'
+					}
+				}
+			],
+			feedbacks: [
+				{
+					type: 'recordStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red
+					}
+				}
+			]
+		});
+
+		presets.push({
+			category: 'Commands',
 			label: 'Start Stream',
 			bank: {
 				style: 'text',
@@ -65,6 +118,18 @@ module.exports = {
 					action: 'startStop',
 					options: {
 						command: 'ReplicatorCommand&value=3'
+					}
+				}
+			],
+			feedbacks: [
+				{
+					type: 'streamStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red
 					}
 				}
 			]
@@ -85,6 +150,47 @@ module.exports = {
 					action: 'startStop',
 					options: {
 						command: 'ReplicatorCommand&value=4'
+					}
+				}
+			]
+		});
+
+		presets.push({
+			category: 'Commands',
+			label: 'Helo Stream',
+			bank: {
+				style: 'text',
+				text: 'HELO STREAM',
+				size: '14',
+				latch: true,
+				color: white,
+				bgcolor: green
+			},
+			actions: [
+				{
+					action: 'startStop',
+					options: {
+						command: 'ReplicatorCommand&value=3'
+					}
+				}
+			],
+			release_actions: [
+				{
+					action: 'startStop',
+					options: {
+						command: 'ReplicatorCommand&value=4'
+					}
+				}
+			],
+			feedbacks: [
+				{
+					type: 'streamStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red
 					}
 				}
 			]

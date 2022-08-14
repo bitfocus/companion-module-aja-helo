@@ -4,6 +4,7 @@ const variables = require('./src/variables')
 const polling = require('./src/polling')
 const actions = require('./src/actions')
 const presets = require('./src/presets')
+const feedbacks = require('./src/feedbacks')
 
 
 class HeloInstance extends InstanceSkel {
@@ -13,6 +14,9 @@ class HeloInstance extends InstanceSkel {
 		this.config = config
 		this.pollingInterval = undefined
 
+		this.recordStatus = -1
+		this.streamStatus = -1
+
 		// Assign the methods from the listed files to this class
 		Object.assign(this, {
 			...configFields,
@@ -20,6 +24,7 @@ class HeloInstance extends InstanceSkel {
 			...polling,
 			...actions,
 			...presets,
+			...feedbacks,
 		})
 	}
 
@@ -39,6 +44,8 @@ class HeloInstance extends InstanceSkel {
 		if (this.config.host) {
 			// Update the actions
 			this.actions()
+
+			this.feedbacks()
 
 			// Update Variables
 			this.updateVariableDefinitions()
