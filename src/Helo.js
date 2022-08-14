@@ -15,19 +15,23 @@ class Helo {
 
 	async sendRequest(cmd) {
 		let requestUrl = this.baseUrl + cmd
-
-		const response = await fetch(requestUrl, this.requestOptions)
-
-		if (!response.ok) {
-			this.log('error', 'Error from AJA: ' + response);
+		try {
+			const response = await fetch(requestUrl, this.requestOptions)
+			if (!response.ok) {
+				return {
+					status: 'failed',
+				}
+			}
+			return {
+				status: 'success',
+				response: await response.json(),
+			}
+		} catch (err) {
 			return {
 				status: 'failed',
 			}
 		}
-		return {
-			status: 'success',
-			response: await response.json(),
-		}
+
 	}
 }
 
