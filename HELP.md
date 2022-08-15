@@ -1,6 +1,6 @@
 ## AJA HELO
 
-**Available commands**
+**Supported Actions**
 
 * Start/Stop Record
 * Start/Stop Streaming
@@ -10,3 +10,7 @@
 * Rename file with current timestamp - YYYYMMDD_HHMM
 
 Check out the [AJA HELO Support Page](https://www.aja.com/products/helo#support) for firmware updates and hardware support.
+
+**Variables & Polling**
+
+This module supports polling the HELO REST API, and saves the response to certain states. Polling can be set to various options.
