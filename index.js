@@ -11,14 +11,16 @@ class HeloInstance extends InstanceSkel {
 	constructor(system, id, config) {
 		super(system, id, config)
 
-		this.config = config
-		this.pollingInterval = undefined
+		let self = this
 
-		this.recordStatus = -1
-		this.streamStatus = -1
+		self.config = config
+		self.pollingInterval = undefined
+
+		self.recordStatus = -1
+		self.streamStatus = -1
 
 		// Assign the methods from the listed files to this class
-		Object.assign(this, {
+		Object.assign(self, {
 			...configFields,
 			...variables,
 			...polling,
@@ -29,45 +31,50 @@ class HeloInstance extends InstanceSkel {
 	}
 
 	init() {
-		this.status(this.STATUS_UNKNOWN)
+		let self = this
+
+		self.status(self.STATUS_UNKNOWN)
 
 		// Update the config
-		this.updateConfig()
+		self.updateConfig()
 	}
 
 	updateConfig(config) {
+		let self = this
+
 		if (config) {
-			this.config = config
+			self.config = config
 		}
 
 		// Quickly check if certain config values are present and continue setup
-		if (this.config.host) {
+		if (self.config.host) {
 			// Update the actions
-			this.actions()
+			self.actions()
 
-			this.feedbacks()
+			self.feedbacks()
 
 			// Update Variables
-			this.updateVariableDefinitions()
+			self.updateVariableDefinitions()
 
 			// Init the presets
-			this.presets()
+			self.presets()
 
 			// Start polling for settingvalues
-			this.initPolling()
+			self.initPolling()
 
 			// Set status to OK
-			this.status(this.STATUS_OK)
+			self.status(self.STATUS_OK)
 		}
 	}
 
 	destroy() {
+		let self = this
 		// Cleanup polling
-		if (this.pollingInterval) {
-			clearInterval(this.pollingInterval)
+		if (self.pollingInterval) {
+			clearInterval(self.pollingInterval)
 		}
 
-		this.debug('destroy', this.id)
+		self.debug('destroy', self.id)
 	}
 
 }

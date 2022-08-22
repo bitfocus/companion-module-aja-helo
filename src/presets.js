@@ -1,12 +1,13 @@
 module.exports = {
 	presets() {
+		let self = this
 		const presets = []
 
-		const white = this.rgb(255, 255, 255)
-		const black = this.rgb(0, 0, 0)
-		const green = this.rgb(0, 204, 0)
-		const red = this.rgb(220, 53, 69)
-		const blue = this.rgb(0, 0, 255)
+		const white = self.rgb(255, 255, 255)
+		const black = self.rgb(0, 0, 0)
+		const green = self.rgb(0, 204, 0)
+		const red = self.rgb(220, 53, 69)
+		const blue = self.rgb(0, 0, 255)
 
 
 
@@ -196,7 +197,7 @@ module.exports = {
 			]
 		});
 
-		if ((this.config.model == 'classic') || (this.config.model == undefined)) {
+		if ((self.config.model == 'classic') || (self.config.model == undefined)) {
 			for (let i = 1; i <= 10; i++) {
 				presets.push({
 					category: 'Record Profiles',
@@ -244,7 +245,7 @@ module.exports = {
 			}
 		}
 
-		if (this.config.model == 'plus') {
+		if (self.config.model == 'plus') {
 			for (let i = 1; i <= 10; i++) {
 				presets.push({
 					category: 'Layouts',
@@ -289,6 +290,6 @@ module.exports = {
 			}
 		}
 
-		this.setPresetDefinitions(presets)
+		self.setPresetDefinitions(presets)
 	},
 }

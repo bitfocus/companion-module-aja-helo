@@ -5,50 +5,51 @@ module.exports = {
 	 * Inits the polling logic
 	 */
 	initPolling() {
+		let self = this
 		// Cleanup old interval
-		if (this.pollingInterval) {
-			clearInterval(this.pollingInterval)
+		if (self.pollingInterval) {
+			clearInterval(self.pollingInterval)
 		}
 
 		// Setup polling if enabled and host is set
-		if (this.config.enable_polling && this.config.host) {
-			this.log('debug', `Polling ${this.config.host} started...`)
+		if (self.config.enable_polling && self.config.host) {
+			self.log('debug', `Polling ${self.config.host} started...`)
 
-			const connection = new Helo(this.config)
-			this.pollingInterval = setInterval(async () => {
+			const connection = new Helo(self.config)
+			self.pollingInterval = setInterval(async () => {
 				// Now get the record status
 				const resultRecord = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
-				this.debug('info', resultRecord)
+				self.debug('info', resultRecord)
 
 				if (resultRecord.status === 'failed') {
-					this.status(this.STATUS_WARNING)
+					self.status(self.STATUS_WARNING)
 					return
 				}
 
-				this.status(this.STATUS_OK)
+				self.status(self.STATUS_OK)
 
-				this.setVariable('recorder_status_value', resultRecord.response.value)
-				this.setVariable('recorder_status', resultRecord.response.value_name)
-				this.recordStatus = resultRecord.response.value
-				this.checkFeedbacks('recordStatus');
+				self.setVariable('recorder_status_value', resultRecord.response.value)
+				self.setVariable('recorder_status', resultRecord.response.value_name)
+				self.recordStatus = resultRecord.response.value
+				self.checkFeedbacks('recordStatus');
 
 				// Now get the stream status
 				const resultStream = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
-				this.debug('info', resultStream)
+				self.debug('info', resultStream)
 
 				if (resultStream.status === 'failed') {
-					this.status(this.STATUS_WARNING)
+					self.status(self.STATUS_WARNING)
 					return
 				}
 
-				this.status(this.STATUS_OK)
+				self.status(self.STATUS_OK)
 
-				this.setVariable('stream_status_value', resultStream.response.value)
-				this.setVariable('stream_status', resultStream.response.value_name)
-				this.streamStatus = resultStream.response.value
-				this.checkFeedbacks('streamStatus');
+				self.setVariable('stream_status_value', resultStream.response.value)
+				self.setVariable('stream_status', resultStream.response.value_name)
+				self.streamStatus = resultStream.response.value
+				self.checkFeedbacks('streamStatus');
 
-			}, this.config.polling_rate)
+			}, self.config.polling_rate)
 		}
 	},
 }

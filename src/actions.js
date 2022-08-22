@@ -9,38 +9,42 @@ module.exports = {
 	},
 
 	renameTimestamp() {
+		let self = this
+
 		let d = new Date();
-		let curr_date = this.addZero(d.getDate());
-		let curr_month = this.addZero(d.getMonth() + 1);
-		let curr_year = this.addZero(d.getFullYear());
-		let h = this.addZero(d.getHours());
-		let m = this.addZero(d.getMinutes());
+		let curr_date = self.addZero(d.getDate());
+		let curr_month = self.addZero(d.getMonth() + 1);
+		let curr_year = self.addZero(d.getFullYear());
+		let h = self.addZero(d.getHours());
+		let m = self.addZero(d.getMinutes());
 		let stamp = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
 		return stamp;
 	},
 
 	sendCommand(cmd) {
+		let self = this
+
 		let prefix = 'action=set&paramid=eParamID_';
 		if (cmd !== undefined) {
 			try {
-				const connection = new Helo(this.config)
+				const connection = new Helo(self.config)
 				const result = connection.sendRequest(prefix + cmd)
-				this.debug('info', result)
+				self.debug('info', result)
 
 				if (result.status === 'success') {
-					this.status(this.STATUS_OK)
+					self.status(self.STATUS_OK)
 				} else {
-					this.status(this.STATUS_ERROR)
+					self.status(self.STATUS_ERROR)
 				}
 			} catch (error) {
 				let errorText = String(error)
 				if (errorText.match('ECONNREFUSED')) {
-					this.log('error', 'Unable to connect to the streamer...')
-					this.status(this.STATUS_ERROR)
+					self.log('error', 'Unable to connect to the streamer...')
+					self.status(self.STATUS_ERROR)
 				} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
-					this.log('error', 'Connection to streamer has timed out...')
+					self.log('error', 'Connection to streamer has timed out...')
 				} else {
-					this.log('error', 'An error has occurred when connecting to streamer...')
+					self.log('error', 'An error has occurred when connecting to streamer...')
 				}
 			}
 		}
@@ -89,7 +93,7 @@ module.exports = {
 			}
 		}
 
-		if ((this.config.model == 'classic') || (this.config.model == undefined)) {
+		if ((self.config.model == 'classic') || (self.config.model == undefined)) {
 			actionsArr.setProfile = {
 				label: 'Choose Profiles',
 				options: [
@@ -155,7 +159,7 @@ module.exports = {
 			}
 		};
 
-		if (this.config.model == 'plus') {
+		if (self.config.model == 'plus') {
 			actionsArr.selectLayout = {
 				label: 'Select Layout',
 				options: [
@@ -244,6 +248,6 @@ module.exports = {
 			};*/
 		}
 
-		this.setActions(actionsArr);
+		self.setActions(actionsArr);
 	},
 }
