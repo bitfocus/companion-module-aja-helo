@@ -149,6 +149,29 @@ module.exports = {
 			}
 		};
 
+		actionsArr.renameFileFromVariable = {
+			label: 'Rename File From Variable',
+			options: [
+				{
+					type: 'textwithvariables',
+					label: 'Variable name',
+					id: 'name',
+					default: '',
+					tooltip: 'You must provide the full variable name.\nFor example "$(internal:custom_my_cool_variable)"',
+					regex: '\$\(([^:)]+):([^)]+)\)/g' // From instance_skel.js setPresetDefinitions
+				}
+			],
+			callback: function (action, bank) {
+				let cmd = 'FilenamePrefix&value=';
+				self.debug('info', cmd)
+				self.parseVariables(action.options.name, function (name) {
+					cmd += name
+				})
+				self.debug('info', cmd)
+				self.sendCommand(cmd);
+			}
+		};
+
 		actionsArr.renameFileTs = {
 			label: 'Rename File - Timestamp',
 			callback: function (action, bank) {
