@@ -21,6 +21,10 @@ module.exports = {
 				label: `Available drive space`,
 				name: `storage_media_available`,
 			},
+			{
+				label: `Helo Variable BeerGoggles`,
+				name: `beer_goggles`,
+			},
 		])
 	},
 

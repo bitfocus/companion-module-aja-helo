@@ -21,7 +21,8 @@ class HeloInstance extends InstanceSkel {
 			'recorder_status': 'eRRSUninitialized',
 			'stream_status_value': 0,
 			'stream_status': 'eRRSUninitialized',
-			'storage_media_available': 0
+			'storage_media_available': 0,
+			'beer_goggles': "No Beer...",
 		}
 
 		// Assign the methods from the listed files to this class

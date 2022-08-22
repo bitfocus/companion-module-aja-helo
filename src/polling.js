@@ -52,6 +52,16 @@ module.exports = {
 
 				self.STATE.storage_media_available = result.response.value
 
+				result = await connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
+				self.debug('info', result)
+
+				if (result.status === 'failed') {
+					self.status(self.STATUS_WARNING)
+					return
+				}
+
+				self.STATE.beer_goggles = result.response.value_name
+
 				self.checkVariables()
 				self.checkFeedbacks()
 			}, self.config.polling_rate)
