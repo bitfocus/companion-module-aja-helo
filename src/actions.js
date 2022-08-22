@@ -76,6 +76,95 @@ module.exports = {
 			}
 		};
 
+		actionsArr.videoInSelect = {
+			label: 'Video Input',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Video Input',
+					id: 'input',
+					default: 'VideoInSelect&value=0',
+					tooltip: 'Selects a video input source from the video input connections available. This is the video that will be recorded and/or passed through.',
+					choices: [
+						{ id: 'VideoInSelect&value=0', label: 'SDI' },
+						{ id: 'VideoInSelect&value=1', label: 'HDMI' },
+						{ id: 'VideoInSelect&value=2', label: 'Test Pattern' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.input;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.audioInSelect = {
+			label: 'Audio Input',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Audio Input',
+					id: 'input',
+					default: 'AudioInSelect&value=0',
+					tooltip: 'Selects an audio input source from the audio input connections available, including embedded SDI audio which requires an SDI video source and HDMI audio, which requires an HDMI video source.',
+					choices: [
+						{ id: 'AudioInSelect&value=0', label: 'SDI' },
+						{ id: 'AudioInSelect&value=1', label: 'HDMI' },
+						{ id: 'AudioInSelect&value=2', label: 'Analog' },
+						{ id: 'AudioInSelect&value=4', label: 'None' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.input;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.analogAudioInputLevel = {
+			label: 'Audio Level (Analog only)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Audio Level on analog signal',
+					id: 'level',
+					tooltip: 'Selects the analog input audio level, where 0dB is the least sensitive and +12dB is the most sensitive',
+					default: 'AnalogAudioInputLevel&value=0',
+					choices: [
+						{ id: 'AnalogAudioInputLevel&value=0', label: '0dB' },
+						{ id: 'AnalogAudioInputLevel&value=1', label: '+6dB' },
+						{ id: 'AnalogAudioInputLevel&value=2', label: '+12dB' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.level;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.audioDelay = {
+			label: 'Audio Delay',
+			options: [
+				{
+					type: 'number',
+					label: 'Audio Delay (ms)',
+					tooltip: 'Delays audio on analog, HDMI, recordings, and streams by a fixed number of milliseconds relative to input (0-300 ms)',
+					id: 'audioDelay',
+					min: 0,
+					max: 300,
+					default: 0,
+					required: true,
+					step: 1,
+					range: false
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = 'DelayAudioMs&value=' + action.options.audioDelay;
+				self.sendCommand(cmd);
+			}
+		};
+
 		actionsArr.mute = {
 			label: 'Mute',
 			callback: function (action, bank) {
@@ -140,7 +229,8 @@ module.exports = {
 				{
 					type: 'textinput',
 					label: 'file name',
-					id: 'fileName'
+					id: 'fileName',
+					tooltip: 'Set the base filename for recordings.'
 				}
 			],
 			callback: function (action, bank) {
