@@ -19,7 +19,12 @@ state = {
     'eParamID_AVMute' : 0,
     'eParamID_RecordingProfileSel' : 1,
     'eParamID_LayoutSelector' : 1,
-    'eParamID_FilenamePrefix' : ""
+    'eParamID_FilenamePrefix' : "",
+    'eParamID_CurrentMediaAvailable': 0,
+    'eParamID_VideoInSelect': 0,
+    'eParamID_AudioInSelect': 0,
+    'eParamID_DelayAudioMs': 0,
+    'eParamID_AnalogAudioInputLevel': 0,
 }
 
 enums = {
@@ -38,7 +43,24 @@ enums = {
         3: "eRRSFailingInIdle",
         4: "eRRSFailingInStream",
         5: "eRRSShutdown"
-    }
+    },
+    'eParamID_VideoInSelect' : {
+        0: "SDI",
+        1: "HDMI",
+        2: "Test Pattern"
+    },
+    'eParamID_AudioInSelect' : {
+        0: "SDI",
+        1: "HDMI",
+        2: "Analog",
+        3: "",
+        4: "None"
+    },
+    'eParamID_AnalogAudioInputLevel' : {
+        0: "0dB",
+        1: "+6dB",
+        2: "+12dB"
+    },
 }
 
 
@@ -78,14 +100,25 @@ def config():
         if paramId in ['eParamID_RecordingProfileSel','eParamID_LayoutSelector']:
             if int(value) not in range(1,11):
                 return f"Bad request: value must be 1 - 10", 400
-
+        if paramId == 'eParamID_CurrentMediaAvailable':
+            if int(value) not in range(0,100):
+                return f"Bad request: value must be 0 - 99", 400
+        if paramId in ['eParamID_VideoInSelect', 'eParamID_AudioInSelect', 'eParamID_AnalogAudioInputLevel']:
+            if int(value) not in range(0,4):
+                return f"Bad request: value must be 0 - 3", 400
+        if paramId == 'eParamID_AudioInSelect':
+            if int(value) not in range(0,5):
+                return f"Bad request: value must be 0 - 4", 400
+        if paramId == 'eParamID_DelayAudioMs':
+            if int(value) not in range(0,301):
+                return f"Bad request: value must be 0 - 301", 400
         if paramId == 'eParamID_FilenamePrefix':
             state[paramId] = value
         else:
             state[paramId] = int(value)
         return jsonify({'success':True}), 200, {'ContentType':'application/json'}
     elif action == 'get':
-        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState']:
+        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState', 'eParamID_VideoInSelect', 'eParamID_AudioInSelect','eParamID_AudioInSelect']:
             return jsonify({
                 "paramid":"2097225226", # leaving as record state, ignored
                 "name":paramId,
