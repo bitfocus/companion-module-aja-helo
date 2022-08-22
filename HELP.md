@@ -6,8 +6,10 @@
 * Start/Stop Streaming
 * Change recording profile
 * Change streaming profile
+* Change Audio / Video input
 * Rename file
 * Rename file with current timestamp - YYYYMMDD_HHMM
+* Rename file with variable
 
 Check out the [AJA HELO Support Page](https://www.aja.com/products/helo#support) for firmware updates and hardware support.
 
