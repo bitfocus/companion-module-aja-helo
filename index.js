@@ -16,8 +16,13 @@ class HeloInstance extends InstanceSkel {
 		self.config = config
 		self.pollingInterval = undefined
 
-		self.recordStatus = -1
-		self.streamStatus = -1
+		self.STATE = {
+			'recorder_status_value': 0,
+			'recorder_status': 'eRRSUninitialized',
+			'stream_status_value': 0,
+			'stream_status': 'eRRSUninitialized',
+			'storage_media_available': 0
+		}
 
 		// Assign the methods from the listed files to this class
 		Object.assign(self, {
@@ -55,6 +60,7 @@ class HeloInstance extends InstanceSkel {
 
 			// Update Variables
 			self.updateVariableDefinitions()
+			self.checkVariables()
 
 			// Init the presets
 			self.presets()

@@ -26,12 +26,8 @@ module.exports = {
 					return
 				}
 
-				self.status(self.STATUS_OK)
-
-				self.setVariable('recorder_status_value', resultRecord.response.value)
-				self.setVariable('recorder_status', resultRecord.response.value_name)
-				self.recordStatus = resultRecord.response.value
-				self.checkFeedbacks('recordStatus');
+				self.STATE.recorder_status_value = resultRecord.response.value
+				self.STATE.recorder_status = resultRecord.response.value_name
 
 				// Now get the stream status
 				const resultStream = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
@@ -42,13 +38,22 @@ module.exports = {
 					return
 				}
 
-				self.status(self.STATUS_OK)
+				self.STATE.stream_status_value = resultStream.response.value
+				self.STATE.stream_status = resultStream.response.value_name
 
-				self.setVariable('stream_status_value', resultStream.response.value)
-				self.setVariable('stream_status', resultStream.response.value_name)
-				self.streamStatus = resultStream.response.value
-				self.checkFeedbacks('streamStatus');
 
+				const resultMedia = await connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
+				self.debug('info', resultMedia)
+
+				if (resultMedia.status === 'failed') {
+					self.status(self.STATUS_WARNING)
+					return
+				}
+
+				self.STATE.storage_media_available = resultMedia.response.value
+
+				self.checkVariables()
+				self.checkFeedbacks()
 			}, self.config.polling_rate)
 		}
 	},

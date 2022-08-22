@@ -26,9 +26,8 @@ module.exports = {
 
 		let prefix = 'action=set&paramid=eParamID_';
 		if (cmd !== undefined) {
-			try {
-				const connection = new Helo(self.config)
-				const result = connection.sendRequest(prefix + cmd)
+			const connection = new Helo(self.config)
+			const result = connection.sendRequest(prefix + cmd).then(result => {
 				self.debug('info', result)
 
 				if (result.status === 'success') {
@@ -36,7 +35,7 @@ module.exports = {
 				} else {
 					self.status(self.STATUS_ERROR)
 				}
-			} catch (error) {
+			}).catch(error => {
 				let errorText = String(error)
 				if (errorText.match('ECONNREFUSED')) {
 					self.log('error', 'Unable to connect to the streamer...')
@@ -46,7 +45,7 @@ module.exports = {
 				} else {
 					self.log('error', 'An error has occurred when connecting to streamer...')
 				}
-			}
+			})
 		}
 	},
 
