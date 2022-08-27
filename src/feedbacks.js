@@ -12,9 +12,9 @@ module.exports = {
         const backgroundColorGreen = self.rgb(0, 255, 0) // Green
         const backgroundColorOrange = self.rgb(255, 102, 0) // Orange
 
-        feedbacks['recordStatus'] = {
+        feedbacks.recordStatus = {
             type: 'boolean',
-            label: 'Show Record Status On Button',
+            label: 'Record Status',
             description: 'Indicate if Helo is Recording',
             style: {
                 color: foregroundColorBlack,
@@ -50,8 +50,8 @@ module.exports = {
                         errsStatus.push(3, 4)
                         break;
                 }
-                if (self.recordStatus !== -1) {
-                    if (errsStatus.includes(self.recordStatus)) {
+                if (self.STATE.recorder_status_value !== -1) {
+                    if (errsStatus.includes(self.STATE.recorder_status_value)) {
                         return true;
                     }
                 }
@@ -59,9 +59,9 @@ module.exports = {
             }
         }
 
-        feedbacks['streamStatus'] = {
+        feedbacks.streamStatus = {
             type: 'boolean',
-            label: 'Show Stream Status On Button',
+            label: 'Stream Status',
             description: 'Indicate if Helo is Streaming',
             style: {
                 color: foregroundColorBlack,
@@ -97,14 +97,41 @@ module.exports = {
                         errsStatus.push(3, 4)
                         break;
                 }
-                if (self.streamStatus !== -1) {
-                    if (errsStatus.includes(self.streamStatus)) {
+                if (self.STATE.stream_status_value !== -1) {
+                    if (errsStatus.includes(self.STATE.stream_status_value)) {
                         return true;
                     }
                 }
                 return false
             }
         }
+
+        feedbacks.mediaAvailable = {
+            type: 'boolean',
+            label: 'Storage Available',
+            description: 'Indicate if the primary recording drive has low media space available',
+            style: {
+                color: foregroundColorBlack,
+                bgcolor: backgroundColorOrange,
+            },
+            options: [
+                {
+                    type: 'number',
+                    label: 'Indicate on less than X % remaining',
+                    id: 'checkValue',
+                    default: 5,
+                }
+            ],
+            callback: function (feedback) {
+                let opt = feedback.options;
+
+                if (self.STATE.storage_media_available < opt.checkValue) {
+                    return true
+                }
+                return false
+            }
+        }
+
         self.setFeedbackDefinitions(feedbacks);
     }
 }

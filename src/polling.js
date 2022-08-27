@@ -5,50 +5,66 @@ module.exports = {
 	 * Inits the polling logic
 	 */
 	initPolling() {
+		let self = this
 		// Cleanup old interval
-		if (this.pollingInterval) {
-			clearInterval(this.pollingInterval)
+		if (self.pollingInterval) {
+			clearInterval(self.pollingInterval)
 		}
 
 		// Setup polling if enabled and host is set
-		if (this.config.enable_polling && this.config.host) {
-			this.log('debug', `Polling ${this.config.host} started...`)
+		if (self.config.enable_polling && self.config.host) {
+			self.log('debug', `Polling ${self.config.host} started...`)
 
-			const connection = new Helo(this.config)
-			this.pollingInterval = setInterval(async () => {
+			const connection = new Helo(self.config)
+			self.pollingInterval = setInterval(async () => {
 				// Now get the record status
-				const resultRecord = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
-				this.debug('info', resultRecord)
+				let result = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
+				self.debug('info', result)
 
-				if (resultRecord.status === 'failed') {
-					this.status(this.STATUS_WARNING)
+				if (result.status === 'failed') {
+					self.status(self.STATUS_WARNING)
 					return
 				}
 
-				this.status(this.STATUS_OK)
-
-				this.setVariable('recorder_status_value', resultRecord.response.value)
-				this.setVariable('recorder_status', resultRecord.response.value_name)
-				this.recordStatus = resultRecord.response.value
-				this.checkFeedbacks('recordStatus');
+				self.STATE.recorder_status_value = result.response.value
+				self.STATE.recorder_status = result.response.value_name
 
 				// Now get the stream status
-				const resultStream = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
-				this.debug('info', resultStream)
+				result = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
+				self.debug('info', result)
 
-				if (resultStream.status === 'failed') {
-					this.status(this.STATUS_WARNING)
+				if (result.status === 'failed') {
+					self.status(self.STATUS_WARNING)
 					return
 				}
 
-				this.status(this.STATUS_OK)
+				self.STATE.stream_status_value = result.response.value
+				self.STATE.stream_status = result.response.value_name
 
-				this.setVariable('stream_status_value', resultStream.response.value)
-				this.setVariable('stream_status', resultStream.response.value_name)
-				this.streamStatus = resultStream.response.value
-				this.checkFeedbacks('streamStatus');
 
-			}, this.config.polling_rate)
+				result = await connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
+				self.debug('info', result)
+
+				if (result.status === 'failed') {
+					self.status(self.STATUS_WARNING)
+					return
+				}
+
+				self.STATE.storage_media_available = result.response.value
+
+				result = await connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
+				self.debug('info', result)
+
+				if (result.status === 'failed') {
+					self.status(self.STATUS_WARNING)
+					return
+				}
+
+				self.STATE.beer_goggles = result.response.value_name
+
+				self.checkVariables()
+				self.checkFeedbacks()
+			}, self.config.polling_rate)
 		}
 	},
 }

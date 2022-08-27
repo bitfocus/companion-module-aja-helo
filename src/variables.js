@@ -17,6 +17,23 @@ module.exports = {
 				label: `Stream Status`,
 				name: `stream_status`,
 			},
+			{
+				label: `Available drive space (%)`,
+				name: `storage_media_available`,
+			},
+			{
+				label: `Helo Variable BeerGoggles`,
+				name: `beer_goggles`,
+			},
 		])
 	},
+
+	checkVariables() {
+		let self = this
+		for (var key in self.STATE) {
+			var value = self.STATE[key];
+
+			self.setVariable(key, value)
+		}
+	}
 }

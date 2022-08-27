@@ -9,40 +9,43 @@ module.exports = {
 	},
 
 	renameTimestamp() {
+		let self = this
+
 		let d = new Date();
-		let curr_date = this.addZero(d.getDate());
-		let curr_month = this.addZero(d.getMonth() + 1);
-		let curr_year = this.addZero(d.getFullYear());
-		let h = this.addZero(d.getHours());
-		let m = this.addZero(d.getMinutes());
+		let curr_date = self.addZero(d.getDate());
+		let curr_month = self.addZero(d.getMonth() + 1);
+		let curr_year = self.addZero(d.getFullYear());
+		let h = self.addZero(d.getHours());
+		let m = self.addZero(d.getMinutes());
 		let stamp = curr_year + "" + curr_month + "" + curr_date + "_" + h + m;
 		return stamp;
 	},
 
 	sendCommand(cmd) {
+		let self = this
+
 		let prefix = 'action=set&paramid=eParamID_';
 		if (cmd !== undefined) {
-			try {
-				const connection = new Helo(this.config)
-				const result = connection.sendRequest(prefix + cmd)
-				this.debug('info', result)
+			const connection = new Helo(self.config)
+			const result = connection.sendRequest(prefix + cmd).then(result => {
+				self.debug('info', result)
 
 				if (result.status === 'success') {
-					this.status(this.STATUS_OK)
+					self.status(self.STATUS_OK)
 				} else {
-					this.status(this.STATUS_ERROR)
+					self.status(self.STATUS_ERROR)
 				}
-			} catch (error) {
+			}).catch(error => {
 				let errorText = String(error)
 				if (errorText.match('ECONNREFUSED')) {
-					this.log('error', 'Unable to connect to the streamer...')
-					this.status(this.STATUS_ERROR)
+					self.log('error', 'Unable to connect to the streamer...')
+					self.status(self.STATUS_ERROR)
 				} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
-					this.log('error', 'Connection to streamer has timed out...')
+					self.log('error', 'Connection to streamer has timed out...')
 				} else {
-					this.log('error', 'An error has occurred when connecting to streamer...')
+					self.log('error', 'An error has occurred when connecting to streamer...')
 				}
-			}
+			})
 		}
 	},
 
@@ -73,6 +76,95 @@ module.exports = {
 			}
 		};
 
+		actionsArr.videoInSelect = {
+			label: 'Video Input',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Video Input',
+					id: 'input',
+					default: 'VideoInSelect&value=0',
+					tooltip: 'Selects a video input source from the video input connections available. This is the video that will be recorded and/or passed through.',
+					choices: [
+						{ id: 'VideoInSelect&value=0', label: 'SDI' },
+						{ id: 'VideoInSelect&value=1', label: 'HDMI' },
+						{ id: 'VideoInSelect&value=2', label: 'Test Pattern' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.input;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.audioInSelect = {
+			label: 'Audio Input',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Audio Input',
+					id: 'input',
+					default: 'AudioInSelect&value=0',
+					tooltip: 'Selects an audio input source from the audio input connections available, including embedded SDI audio which requires an SDI video source and HDMI audio, which requires an HDMI video source.',
+					choices: [
+						{ id: 'AudioInSelect&value=0', label: 'SDI' },
+						{ id: 'AudioInSelect&value=1', label: 'HDMI' },
+						{ id: 'AudioInSelect&value=2', label: 'Analog' },
+						{ id: 'AudioInSelect&value=4', label: 'None' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.input;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.analogAudioInputLevel = {
+			label: 'Audio Level (On Analog Audio only)',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Choose Audio Level on analog signal',
+					id: 'level',
+					tooltip: 'Selects the analog input audio level, where 0dB is the least sensitive and +12dB is the most sensitive',
+					default: 'AnalogAudioInputLevel&value=0',
+					choices: [
+						{ id: 'AnalogAudioInputLevel&value=0', label: '0dB' },
+						{ id: 'AnalogAudioInputLevel&value=1', label: '+6dB' },
+						{ id: 'AnalogAudioInputLevel&value=2', label: '+12dB' },
+					]
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = action.options.level;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.audioDelay = {
+			label: 'Audio Delay',
+			options: [
+				{
+					type: 'number',
+					label: 'Audio Delay (ms)',
+					tooltip: 'Delays audio on analog, HDMI, recordings, and streams by a fixed number of milliseconds relative to input (0-300 ms)',
+					id: 'audioDelay',
+					min: 0,
+					max: 300,
+					default: 0,
+					required: true,
+					step: 1,
+					range: false
+				},
+			],
+			callback: function (action, bank) {
+				let cmd = 'DelayAudioMs&value=' + action.options.audioDelay;
+				self.sendCommand(cmd);
+			}
+		};
+
 		actionsArr.mute = {
 			label: 'Mute',
 			callback: function (action, bank) {
@@ -89,7 +181,7 @@ module.exports = {
 			}
 		}
 
-		if ((this.config.model == 'classic') || (this.config.model == undefined)) {
+		if ((self.config.model == 'classic') || (self.config.model == undefined)) {
 			actionsArr.setProfile = {
 				label: 'Choose Profiles',
 				options: [
@@ -137,11 +229,35 @@ module.exports = {
 				{
 					type: 'textinput',
 					label: 'file name',
-					id: 'fileName'
+					id: 'fileName',
+					tooltip: 'Set the base filename for recordings.'
 				}
 			],
 			callback: function (action, bank) {
 				let cmd = 'FilenamePrefix&value=' + action.options.fileName;
+				self.sendCommand(cmd);
+			}
+		};
+
+		actionsArr.renameFileFromVariable = {
+			label: 'Rename File - Variable',
+			options: [
+				{
+					type: 'textwithvariables',
+					label: 'Variable name',
+					id: 'name',
+					default: '',
+					tooltip: 'You must provide the full variable name.\nFor example "$(internal:custom_my_cool_variable)"',
+					regex: '\$\(([^:)]+):([^)]+)\)/g' // From instance_skel.js setPresetDefinitions
+				}
+			],
+			callback: function (action, bank) {
+				let cmd = 'FilenamePrefix&value=';
+				self.debug('info', cmd)
+				self.parseVariables(action.options.name, function (name) {
+					cmd += name
+				})
+				self.debug('info', cmd)
 				self.sendCommand(cmd);
 			}
 		};
@@ -155,7 +271,7 @@ module.exports = {
 			}
 		};
 
-		if (this.config.model == 'plus') {
+		if (self.config.model == 'plus') {
 			actionsArr.selectLayout = {
 				label: 'Select Layout',
 				options: [
@@ -244,6 +360,6 @@ module.exports = {
 			};*/
 		}
 
-		this.setActions(actionsArr);
+		self.setActions(actionsArr);
 	},
 }
