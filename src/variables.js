@@ -18,7 +18,7 @@ module.exports = {
 				name: `stream_status`,
 			},
 			{
-				label: `Available drive space`,
+				label: `Available drive space (%)`,
 				name: `storage_media_available`,
 			},
 			{

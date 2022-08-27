@@ -14,7 +14,7 @@ module.exports = {
 
         feedbacks.recordStatus = {
             type: 'boolean',
-            label: 'Show Record Status On Button',
+            label: 'Record Status',
             description: 'Indicate if Helo is Recording',
             style: {
                 color: foregroundColorBlack,
@@ -61,7 +61,7 @@ module.exports = {
 
         feedbacks.streamStatus = {
             type: 'boolean',
-            label: 'Show Stream Status On Button',
+            label: 'Stream Status',
             description: 'Indicate if Helo is Streaming',
             style: {
                 color: foregroundColorBlack,
@@ -108,8 +108,8 @@ module.exports = {
 
         feedbacks.mediaAvailable = {
             type: 'boolean',
-            label: 'Storage Available feedback',
-            description: 'Change colour of button if low media space available',
+            label: 'Storage Available',
+            description: 'Indicate if the primary recording drive has low media space available',
             style: {
                 color: foregroundColorBlack,
                 bgcolor: backgroundColorOrange,
@@ -117,7 +117,7 @@ module.exports = {
             options: [
                 {
                     type: 'number',
-                    label: 'Change colour at less than X % remaining',
+                    label: 'Indicate on less than X % remaining',
                     id: 'checkValue',
                     default: 5,
                 }

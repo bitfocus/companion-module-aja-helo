@@ -122,7 +122,7 @@ module.exports = {
 		};
 
 		actionsArr.analogAudioInputLevel = {
-			label: 'Audio Level (Analog only)',
+			label: 'Audio Level (On Analog Audio only)',
 			options: [
 				{
 					type: 'dropdown',
@@ -240,7 +240,7 @@ module.exports = {
 		};
 
 		actionsArr.renameFileFromVariable = {
-			label: 'Rename File From Variable',
+			label: 'Rename File - Variable',
 			options: [
 				{
 					type: 'textwithvariables',
