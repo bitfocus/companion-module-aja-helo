@@ -1,5 +1,3 @@
-const Helo = require('./Helo')
-
 module.exports = {
 	/**
 	 * Inits the polling logic
@@ -15,14 +13,13 @@ module.exports = {
 		if (self.config.enable_polling && self.config.host) {
 			self.log('debug', `Polling ${self.config.host} started...`)
 
-			const connection = new Helo(self.config)
 			self.pollingInterval = setInterval(async () => {
 				// Now get the record status
-				let result = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
-				self.debug('info', result)
+				let result = await self.connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
+				self.log('debug', result)
 
 				if (result.status === 'failed') {
-					self.status(self.STATUS_WARNING)
+					self.updateStatus('connection_failure', 'Failed to connect to device')
 					return
 				}
 
@@ -30,33 +27,32 @@ module.exports = {
 				self.STATE.recorder_status = result.response.value_name
 
 				// Now get the stream status
-				result = await connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
-				self.debug('info', result)
+				result = await self.connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
+				self.log('debug', result)
 
 				if (result.status === 'failed') {
-					self.status(self.STATUS_WARNING)
+					self.updateStatus('connection_failure', 'Failed to connect to device')
 					return
 				}
 
 				self.STATE.stream_status_value = result.response.value
 				self.STATE.stream_status = result.response.value_name
 
-
-				result = await connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
-				self.debug('info', result)
+				result = await self.connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
+				self.log('debug', result)
 
 				if (result.status === 'failed') {
-					self.status(self.STATUS_WARNING)
+					self.updateStatus('connection_failure', 'Failed to connect to device')
 					return
 				}
 
 				self.STATE.storage_media_available = result.response.value
 
-				result = await connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
-				self.debug('info', result)
+				result = await self.connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
+				self.log('debug', result)
 
 				if (result.status === 'failed') {
-					self.status(self.STATUS_WARNING)
+					self.updateStatus('connection_failure', 'Failed to connect to device')
 					return
 				}
 

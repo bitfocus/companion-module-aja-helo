@@ -20,6 +20,7 @@ class Helo {
 			if (!response.ok) {
 				return {
 					status: 'failed',
+					response: 'Device returned a bad response: ' + response.statusText,
 				}
 			}
 			return {
@@ -29,9 +30,9 @@ class Helo {
 		} catch (err) {
 			return {
 				status: 'failed',
+				response: String(err),
 			}
 		}
-
 	}
 }
 

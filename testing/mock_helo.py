@@ -25,6 +25,7 @@ state = {
     'eParamID_AudioInSelect': 0,
     'eParamID_DelayAudioMs': 0,
     'eParamID_AnalogAudioInputLevel': 0,
+    'eParamID_BeerGoggles': 0,
 }
 
 enums = {
@@ -61,6 +62,10 @@ enums = {
         1: "+6dB",
         2: "+12dB"
     },
+    'eParamID_BeerGoggles' : {
+        0: "No Beer...",
+        1: "Beer Thirty!"
+    }
 }
 
 
@@ -94,7 +99,7 @@ def config():
         if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState']:
             if int(value) not in range(0,6):
                 return f"Bad request: value must be 0 - 5", 400
-        if paramId == 'eParamID_AVMute':
+        if paramId in ['eParamID_AVMute','eParamID_BeerGoggles']:
             if int(value) not in range(0,2):
                 return f"Bad request: value must be 0 - 1", 400
         if paramId in ['eParamID_RecordingProfileSel','eParamID_LayoutSelector']:
@@ -118,7 +123,7 @@ def config():
             state[paramId] = int(value)
         return jsonify({'success':True}), 200, {'ContentType':'application/json'}
     elif action == 'get':
-        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState', 'eParamID_VideoInSelect', 'eParamID_AudioInSelect','eParamID_AudioInSelect']:
+        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState', 'eParamID_VideoInSelect', 'eParamID_AudioInSelect','eParamID_AudioInSelect', 'eParamID_BeerGoggles']:
             return jsonify({
                 "paramid":"2097225226", # leaving as record state, ignored
                 "name":paramId,

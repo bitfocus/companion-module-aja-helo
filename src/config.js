@@ -1,20 +1,21 @@
+const { Regex } = require('@companion-module/base')
 module.exports = {
-	config_fields() {
-		// eslint-disable-line camelcase
+	getConfigFields() {
 		return [
 			{
-				type: 'text',
+				type: 'static-text',
 				id: 'info',
 				width: 12,
 				label: 'Information',
-				value: 'This module controls an AJA HELO appliance.  <a href="https://www.aja.com/products/helo#support" target="_new">HELO Support</a>'
+				value:
+					'This module controls an AJA HELO appliance.  <a href="https://www.aja.com/products/helo#support" target="_new">HELO Support</a>',
 			},
 			{
 				type: 'textinput',
 				id: 'host',
 				width: 8,
 				label: 'Target IP',
-				regex: this.REGEX_IP,
+				regex: Regex.IP,
 			},
 			{
 				type: 'number',
@@ -22,7 +23,7 @@ module.exports = {
 				width: 6,
 				label: 'Target Port',
 				default: '80',
-				regex: this.REGEX_PORT,
+				regex: Regex.PORT,
 			},
 			{
 				type: 'dropdown',
@@ -31,11 +32,11 @@ module.exports = {
 				default: 'classic',
 				choices: [
 					{ id: 'classic', label: 'Classic' },
-					{ id: 'plus', label: 'Plus' }
-				]
+					{ id: 'plus', label: 'Plus' },
+				],
 			},
 			{
-				type: 'text',
+				type: 'static-text',
 				id: 'info',
 				width: 12,
 				label: 'Polling',
