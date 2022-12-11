@@ -35,6 +35,9 @@ class HeloInstance extends InstanceBase {
 			stream_status: 'eRRSUninitialized',
 			storage_media_available: 0,
 			beer_goggles: 'No Beer...',
+			NameCounter: 0,
+			RecordingProfileNames: Array.from('Uninitialized'.repeat(10)),
+			StreamingProfileNames: Array.from('Uninitialized'.repeat(10)),
 		}
 
 		self.pollingInterval = undefined

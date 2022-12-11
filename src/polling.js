@@ -12,8 +12,25 @@ module.exports = {
 		// Setup polling if enabled and host is set
 		if (self.config.enable_polling && self.config.host) {
 			self.log('debug', `Polling ${self.config.host} started...`)
-
 			self.pollingInterval = setInterval(async () => {
+				let updated = false
+				if (self.STATE.NameCounter == 0) {
+					for (let i = 1; i <= 10; i++) {
+						let result = await self.connection.sendRequest(`action=get&paramid=eParamID_RecordingProfileName_${i}`)
+						if (result.response.value != self.STATE.RecordingProfileNames[i - 1]) {
+							self.STATE.RecordingProfileNames[i - 1] = result.response.value
+							updated = true
+						}
+						result = await self.connection.sendRequest(`action=get&paramid=eParamID_StreamingProfileName_${i}`)
+						if (result.response.value != self.STATE.StreamingProfileNames[i - 1]) {
+							self.STATE.StreamingProfileNames[i - 1] = result.response.value
+							updated = true
+						}
+					}
+				}
+				if (updated) {
+					self.presets()
+				}
 				// Now get the record status
 				let result = await self.connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
 				self.log('debug', 'RecordStatePoll result: ' + JSON.stringify(result))
@@ -59,6 +76,9 @@ module.exports = {
 
 				self.checkVariables()
 				self.checkFeedbacks()
+				// Incrememnt counter
+				self.STATE.NameCounter += 1
+				self.STATE.NameCounter %= 10
 			}, self.config.polling_rate)
 		}
 	},
