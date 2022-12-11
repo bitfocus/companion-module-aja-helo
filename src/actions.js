@@ -230,7 +230,7 @@ module.exports = {
 					},
 				],
 				callback: async (event) => {
-					let cmd = action.options.profileType + action.options.profileNum
+					let cmd = event.options.profileType + event.options.profileNum
 					sendCommand(cmd)
 				},
 			}
@@ -247,7 +247,7 @@ module.exports = {
 				},
 			],
 			callback: async (event) => {
-				let cmd = 'FilenamePrefix&value=' + action.options.fileName
+				let cmd = 'FilenamePrefix&value=' + event.options.fileName
 				sendCommand(cmd)
 			},
 		}
@@ -347,7 +347,7 @@ module.exports = {
 				],
 				callback: async (event) => {
 					sendCommand('LayoutSelector&value=' + event.options.layout)
-					//sendCommand('LayoutCommand&value=' + action.options.action);
+					//sendCommand('LayoutCommand&value=' + event.options.action);
 					setTimeout(function () {
 						sendCommand('LayoutCommand&value=' + event.options.action)
 					}, 20)
