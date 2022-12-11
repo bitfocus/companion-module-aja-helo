@@ -49,6 +49,7 @@ module.exports = {
 						errsStatus.push(3, 4)
 						break
 				}
+
 				if (self.STATE.recorder_status_value !== -1) {
 					if (errsStatus.includes(self.STATE.recorder_status_value)) {
 						return true

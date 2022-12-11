@@ -9,7 +9,7 @@ module.exports = {
 			if (cmd !== undefined) {
 				try {
 					const result = self.connection.sendRequest(prefix + cmd)
-					self.log('debug', result)
+					self.log('debug', 'Command result: ' + JSON.stringify(result))
 
 					if (result.status === 'success') {
 						self.updateStatus('ok')
@@ -19,12 +19,12 @@ module.exports = {
 				} catch (error) {
 					let errorText = String(error)
 					if (errorText.match('ECONNREFUSED')) {
-						this.log('error', 'Unable to connect to the streamer...')
-						this.status(this.STATUS_ERROR)
+						self.log('error', 'Unable to connect to the streamer...')
+						self.status(this.STATUS_ERROR)
 					} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
-						this.log('error', 'Connection to streamer has timed out...')
+						self.log('error', 'Connection to streamer has timed out...')
 					} else {
-						this.log('error', 'An error has occurred when connecting to streamer...')
+						self.log('error', 'An error has occurred when connecting to streamer...')
 					}
 				}
 			}

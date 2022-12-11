@@ -208,6 +208,144 @@ module.exports = {
 			],
 		}
 
+		presets.mediaAvailable = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Storage Space',
+			style: {
+				text: 'Storage Remaining\n$(helo:storage_media_available)',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'mediaAvailable',
+					options: {
+						checkValue: 10,
+					},
+					style: {
+						color: white,
+						bgcolor: orange,
+					},
+				},
+				{
+					feedbackId: 'mediaAvailable',
+					options: {
+						checkValue: 5,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+			],
+		}
+		presets.streamStatus = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Stream status',
+			style: {
+				text: 'Stream status',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 0,
+					},
+					style: {
+						color: white,
+						bgcolor: blue,
+					},
+				},
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 2,
+					},
+					style: {
+						color: white,
+						bgcolor: black,
+					},
+				},
+			],
+		}
+		presets.recordStatus = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Stream status',
+			style: {
+				text: 'Record status',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 0,
+					},
+					style: {
+						color: white,
+						bgcolor: blue,
+					},
+				},
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 2,
+					},
+					style: {
+						color: white,
+						bgcolor: black,
+					},
+				},
+			],
+		}
+
 		if (self.config.model == 'classic' || self.config.model == undefined) {
 			for (let i = 1; i <= 10; i++) {
 				presets[`recordProfile${i}`] = {
