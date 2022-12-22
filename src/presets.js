@@ -353,8 +353,8 @@ module.exports = {
 					category: 'Record Profiles',
 					name: 'Record Profile ' + i,
 					style: {
-						text: 'RECORD\\nPROFILE\\n' + i,
-						size: '14',
+						text: self.STATE.RecordingProfileNames[i - 1],
+						size: 'auto',
 						color: white,
 						bgcolor: black,
 					},
@@ -379,8 +379,8 @@ module.exports = {
 					category: 'Stream Profiles',
 					name: 'Stream Profile ' + i,
 					style: {
-						text: 'STREAM\\nPROFILE\\n' + i,
-						size: '14',
+						text: self.STATE.StreamingProfileNames[i - 1],
+						size: 'auto',
 						color: white,
 						bgcolor: black,
 					},
@@ -410,8 +410,8 @@ module.exports = {
 					category: 'Layouts',
 					name: 'Select Layout ' + i,
 					style: {
-						text: 'SELECT\\nLAYOUT\\n' + i,
-						size: '14',
+						text: `SELECT\\n${self.STATE.LayoutNames[i - 1]}\\n`,
+						size: 'auto',
 						color: white,
 						bgcolor: black,
 					},
@@ -436,8 +436,8 @@ module.exports = {
 					category: 'Layouts',
 					name: 'Recall Layout ' + i,
 					style: {
-						text: 'RECALL\\nLAYOUT\\n' + i,
-						size: '14',
+						text: `RECALL\\n${self.STATE.LayoutNames[i - 1]}\\n`,
+						size: 'auto',
 						color: white,
 						bgcolor: black,
 					},

@@ -28,6 +28,8 @@ state = {
     'eParamID_BeerGoggles': 0,
 }
 
+state = {**state, **{f'eParamID_StreamingProfileName_{i}':f"Streaming Profile Name {i}" for i in range(1,11)}}
+
 enums = {
     'eParamID_ReplicatorRecordState' :  {
         0: "eRRSUninitialized",
@@ -117,13 +119,13 @@ def config():
         if paramId == 'eParamID_DelayAudioMs':
             if int(value) not in range(0,301):
                 return f"Bad request: value must be 0 - 301", 400
-        if paramId == 'eParamID_FilenamePrefix':
+        if paramId == 'eParamID_FilenamePrefix' or paramId in [f'eParamID_StreamingProfileName_{i}' for i in range(1,11)]:
             state[paramId] = value
         else:
             state[paramId] = int(value)
         return jsonify({'success':True}), 200, {'ContentType':'application/json'}
     elif action == 'get':
-        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState', 'eParamID_VideoInSelect', 'eParamID_AudioInSelect','eParamID_AudioInSelect', 'eParamID_BeerGoggles']:
+        if paramId in ['eParamID_ReplicatorRecordState','eParamID_ReplicatorStreamState', 'eParamID_VideoInSelect', 'eParamID_AudioInSelect','eParamID_AudioInSelect', 'eParamID_BeerGoggles'] or paramId in [f'eParamID_StreamingProfileName_{i}' for i in range(1,11)]:
             return jsonify({
                 "paramid":"2097225226", # leaving as record state, ignored
                 "name":paramId,
