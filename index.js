@@ -36,8 +36,9 @@ class HeloInstance extends InstanceBase {
 			storage_media_available: 0,
 			beer_goggles: 'No Beer...',
 			NameCounter: 0,
-			RecordingProfileNames: Array.from('Uninitialized'.repeat(10)),
-			StreamingProfileNames: Array.from('Uninitialized'.repeat(10)),
+			RecordingProfileNames: Array.from(Array(10)).map((e, i) => `${i + 1}`),
+			StreamingProfileNames: Array.from(Array(10)).map((e, i) => `${i + 1}`),
+			LayoutNames: Array.from(Array(10)).map((e, i) => `Layout ${i + 1}`),
 		}
 
 		self.pollingInterval = undefined

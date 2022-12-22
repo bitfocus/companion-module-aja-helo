@@ -410,7 +410,7 @@ module.exports = {
 					category: 'Layouts',
 					name: 'Select Layout ' + i,
 					style: {
-						text: 'SELECT\\nLAYOUT\\n' + i,
+						text: `SELECT\\n${self.STATE.LayoutNames[i - 1]}\\n`,
 						size: 'auto',
 						color: white,
 						bgcolor: black,
@@ -436,7 +436,7 @@ module.exports = {
 					category: 'Layouts',
 					name: 'Recall Layout ' + i,
 					style: {
-						text: 'RECALL\\nLAYOUT\\n' + i,
+						text: `RECALL\\n${self.STATE.LayoutNames[i - 1]}\\n`,
 						size: 'auto',
 						color: white,
 						bgcolor: black,
