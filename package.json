@@ -1,31 +1,22 @@
 {
 	"name": "aja-helo",
-	"version": "1.0.10",
-	"api_version": "1.0.0",
-	"keywords": [
-		"Stream",
-		"Encode",
-		"Recording"
-	],
-	"manufacturer": "AJA",
-	"product": "HELO",
-	"shortname": "helo",
-	"homepage": "https://github.com/bitfocus/companion-module-aja-helo#readme",
-	"description": "Remote control of AJA's HELO recording and streaming appliance.",
+	"version": "2.0.0",
 	"main": "index.js",
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"format": "prettier -w ."
 	},
-	"author": "Casey Selph <cxselph@gmail.com>",
 	"license": "MIT",
-	"dependencies": {
-		"node-fetch": "^2.6.0"
-	},
-	"bugs": {
-		"url": "https://github.com/bitfocus/companion-module-aja-helo/issues"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/bitfocus/companion-module-aja-helo.git"
+	},
+	"dependencies": {
+		"@companion-module/base": "~1.0.0",
+		"node-fetch": "^2.6.0"
+	},
+	"prettier": "@companion-module/tools/.prettierrc.json",
+	"devDependencies": {
+		"@companion-module/tools": "^0.5.1"
 	}
 }

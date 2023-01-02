@@ -1,292 +1,462 @@
+const { combineRgb } = require('@companion-module/base')
+
 module.exports = {
 	presets() {
 		let self = this
-		const presets = []
+		const presets = {}
 
-		const white = self.rgb(255, 255, 255)
-		const black = self.rgb(0, 0, 0)
-		const green = self.rgb(0, 204, 0)
-		const red = self.rgb(220, 53, 69)
-		const blue = self.rgb(0, 0, 255)
+		const white = combineRgb(255, 255, 255)
+		const black = combineRgb(0, 0, 0)
+		const red = combineRgb(220, 53, 69)
+		const green = combineRgb(0, 204, 0)
+		const orange = combineRgb(255, 102, 0)
+		const blue = combineRgb(0, 0, 255)
 
-
-
-		presets.push({
+		presets.startRecord = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Start Record',
-			bank: {
-				style: 'text',
+			name: 'Start Record',
+			style: {
 				text: 'START RECORD',
 				size: '14',
 				color: white,
-				bgcolor: green
+				bgcolor: green,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=1'
-					}
-				}
+					down: [
+						{
+							actionId: 'startStop',
+							options: {
+								command: 'ReplicatorCommand&value=1',
+							},
+						},
+					],
+					up: [],
+				},
 			],
 			feedbacks: [
 				{
-					type: 'recordStatus',
+					feedbackId: 'recordStatus',
 					options: {
 						status: 1,
 					},
 					style: {
 						color: white,
-						bgcolor: red
-					}
-				}
-			]
-		});
+						bgcolor: red,
+					},
+				},
+			],
+		}
 
-		presets.push({
+		presets.stopRecord = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Stop Record',
-			bank: {
-				style: 'text',
+			name: 'Stop Record',
+			style: {
 				text: 'STOP RECORD',
 				size: '14',
 				color: white,
-				bgcolor: blue
+				bgcolor: blue,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=2'
-					}
-				}
-			]
-		});
+					down: [
+						{
+							actionId: 'startStop',
+							options: {
+								command: 'ReplicatorCommand&value=2',
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		}
 
-		presets.push({
+		presets.toggleRecord = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Helo Record',
-			bank: {
-				style: 'text',
+			name: 'Toggle Record',
+			style: {
 				text: 'HELO RECORD',
 				size: '14',
-				latch: true,
 				color: white,
-				bgcolor: green
+				bgcolor: green,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=1'
-					}
-				}
-			],
-			release_actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=2'
-					}
-				}
+					down: [
+						{
+							actionId: 'toggleRecord',
+							options: {},
+						},
+					],
+					up: [],
+				},
 			],
 			feedbacks: [
 				{
-					type: 'recordStatus',
+					feedbackId: 'recordStatus',
 					options: {
 						status: 1,
 					},
 					style: {
 						color: white,
-						bgcolor: red
-					}
-				}
-			]
-		});
+						bgcolor: red,
+					},
+				},
+			],
+		}
 
-		presets.push({
+		presets.startStream = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Start Stream',
-			bank: {
-				style: 'text',
+			name: 'Start Stream',
+			style: {
 				text: 'START STREAM',
 				size: '14',
 				color: white,
-				bgcolor: green
+				bgcolor: green,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=3'
-					}
-				}
+					down: [
+						{
+							actionId: 'startStop',
+							options: {
+								command: 'ReplicatorCommand&value=3',
+							},
+						},
+					],
+					up: [],
+				},
 			],
 			feedbacks: [
 				{
-					type: 'streamStatus',
+					feedbackId: 'streamStatus',
 					options: {
 						status: 1,
 					},
 					style: {
 						color: white,
-						bgcolor: red
-					}
-				}
-			]
-		});
+						bgcolor: red,
+					},
+				},
+			],
+		}
 
-		presets.push({
+		presets.stopStream = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Stop Stream',
-			bank: {
-				style: 'text',
+			name: 'Stop Stream',
+			style: {
 				text: 'STOP STREAM',
 				size: '14',
 				color: white,
-				bgcolor: blue
+				bgcolor: blue,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=4'
-					}
-				}
-			]
-		});
+					down: [
+						{
+							actionId: 'startStop',
+							options: {
+								command: 'ReplicatorCommand&value=4',
+							},
+						},
+					],
+					up: [],
+				},
+			],
+			feedbacks: [],
+		}
 
-		presets.push({
+		presets.toggleStream = {
+			type: 'button',
 			category: 'Commands',
-			label: 'Helo Stream',
-			bank: {
-				style: 'text',
+			name: 'Toggle Stream',
+			style: {
 				text: 'HELO STREAM',
 				size: '14',
-				latch: true,
 				color: white,
-				bgcolor: green
+				bgcolor: green,
 			},
-			actions: [
+			steps: [
 				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=3'
-					}
-				}
-			],
-			release_actions: [
-				{
-					action: 'startStop',
-					options: {
-						command: 'ReplicatorCommand&value=4'
-					}
-				}
+					down: [
+						{
+							actionId: 'toggleStream',
+							options: {},
+						},
+					],
+					up: [],
+				},
 			],
 			feedbacks: [
 				{
-					type: 'streamStatus',
+					feedbackId: 'streamStatus',
 					options: {
 						status: 1,
 					},
 					style: {
 						color: white,
-						bgcolor: red
-					}
-				}
-			]
-		});
+						bgcolor: red,
+					},
+				},
+			],
+		}
 
-		if ((self.config.model == 'classic') || (self.config.model == undefined)) {
+		presets.mediaAvailable = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Storage Space',
+			style: {
+				text: 'Storage Remaining\n$(helo:storage_media_available)',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'mediaAvailable',
+					options: {
+						checkValue: 10,
+					},
+					style: {
+						color: white,
+						bgcolor: orange,
+					},
+				},
+				{
+					feedbackId: 'mediaAvailable',
+					options: {
+						checkValue: 5,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+			],
+		}
+		presets.streamStatus = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Stream status',
+			style: {
+				text: 'Stream status',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 0,
+					},
+					style: {
+						color: white,
+						bgcolor: blue,
+					},
+				},
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+				{
+					feedbackId: 'streamStatus',
+					options: {
+						status: 2,
+					},
+					style: {
+						color: white,
+						bgcolor: black,
+					},
+				},
+			],
+		}
+		presets.recordStatus = {
+			type: 'button',
+			category: 'Informative',
+			name: 'Stream status',
+			style: {
+				text: 'Record status',
+				size: '14',
+				color: white,
+				bgcolor: blue,
+			},
+			steps: [
+				{
+					down: [],
+					up: [],
+				},
+			],
+			feedbacks: [
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 0,
+					},
+					style: {
+						color: white,
+						bgcolor: blue,
+					},
+				},
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 1,
+					},
+					style: {
+						color: white,
+						bgcolor: red,
+					},
+				},
+				{
+					feedbackId: 'recordStatus',
+					options: {
+						status: 2,
+					},
+					style: {
+						color: white,
+						bgcolor: black,
+					},
+				},
+			],
+		}
+
+		if (self.config.model == 'classic' || self.config.model == undefined) {
 			for (let i = 1; i <= 10; i++) {
-				presets.push({
+				presets[`recordProfile${i}`] = {
+					type: 'button',
 					category: 'Record Profiles',
-					label: 'Record Profile ' + i,
-					bank: {
-						style: 'text',
-						text: 'RECORD\\nPROFILE\\n' + i,
-						size: '14',
+					name: 'Record Profile ' + i,
+					style: {
+						text: self.STATE.RecordingProfileNames[i - 1],
+						size: 'auto',
 						color: white,
-						bgcolor: black
+						bgcolor: black,
 					},
-					actions: [
+					steps: [
 						{
-							action: 'setProfile',
-							options: {
-								profileType: 'RecordingProfileSel&value=',
-								profileNum: (i - 1)
-							}
-						}
-					]
-				});
-			}
-
-			for (let i = 1; i <= 10; i++) {
-				presets.push({
+							down: [
+								{
+									actionId: 'setProfile',
+									options: {
+										profileType: 'RecordingProfileSel&value=',
+										profileNum: i - 1,
+									},
+								},
+							],
+							up: [],
+						},
+					],
+					feedbacks: [],
+				}
+				presets[`streamProfile${i}`] = {
+					type: 'button',
 					category: 'Stream Profiles',
-					label: 'Stream Profile ' + i,
-					bank: {
-						style: 'text',
-						text: 'STREAM\\nPROFILE\\n' + i,
-						size: '14',
+					name: 'Stream Profile ' + i,
+					style: {
+						text: self.STATE.StreamingProfileNames[i - 1],
+						size: 'auto',
 						color: white,
-						bgcolor: black
+						bgcolor: black,
 					},
-					actions: [
+					steps: [
 						{
-							action: 'setProfile',
-							options: {
-								profileType: 'StreamingProfileSel&value=',
-								profileNum: (i - 1)
-							}
-						}
-					]
-				});
+							down: [
+								{
+									actionId: 'setProfile',
+									options: {
+										profileType: 'StreamingProfileSel&value=',
+										profileNum: i - 1,
+									},
+								},
+							],
+							up: [],
+						},
+					],
+					feedbacks: [],
+				}
 			}
 		}
 
 		if (self.config.model == 'plus') {
 			for (let i = 1; i <= 10; i++) {
-				presets.push({
+				presets[`selectLayout${i}`] = {
+					type: 'button',
 					category: 'Layouts',
-					label: 'Select Layout ' + i,
-					bank: {
-						style: 'text',
-						text: 'SELECT\\nLAYOUT\\n' + i,
-						size: '14',
+					name: 'Select Layout ' + i,
+					style: {
+						text: `SELECT\\n${self.STATE.LayoutNames[i - 1]}\\n`,
+						size: 'auto',
 						color: white,
-						bgcolor: black
+						bgcolor: black,
 					},
-					actions: [
+					steps: [
 						{
-							action: 'selectLayout',
-							options: {
-								layout: i,
-							}
-						}
-					]
-				});
+							down: [
+								{
+									actionId: 'selectLayout',
+									options: {
+										layout: i,
+									},
+								},
+							],
+							up: [],
+						},
+					],
+					feedbacks: [],
+				}
 
-				presets.push({
+				presets[`recallLayout${i}`] = {
+					type: 'button',
 					category: 'Layouts',
-					label: 'Recall Layout ' + i,
-					bank: {
-						style: 'text',
-						text: 'RECALL\\nLAYOUT\\n' + i,
-						size: '14',
+					name: 'Recall Layout ' + i,
+					style: {
+						text: `RECALL\\n${self.STATE.LayoutNames[i - 1]}\\n`,
+						size: 'auto',
 						color: white,
-						bgcolor: black
+						bgcolor: black,
 					},
-					actions: [
+					steps: [
 						{
-							action: 'selectLayoutAndDo',
-							options: {
-								layout: i,
-								action: '1'
-							}
-						}
-					]
-				});
+							down: [
+								{
+									actionId: 'selectLayoutAndDo',
+									options: {
+										layout: i,
+										action: '1',
+									},
+								},
+							],
+							up: [],
+						},
+					],
+					feedbacks: [],
+				}
 			}
 		}
 

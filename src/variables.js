@@ -2,38 +2,34 @@ module.exports = {
 	updateVariableDefinitions() {
 		this.setVariableDefinitions([
 			{
-				label: `Recorder Status (Value)`,
-				name: `recorder_status_value`,
+				name: `Recorder Status (Value)`,
+				variableId: `recorder_status_value`,
 			},
 			{
-				label: `Recorder Status`,
-				name: `recorder_status`,
+				name: `Recorder Status`,
+				variableId: `recorder_status`,
 			},
 			{
-				label: `Stream Status (Value)`,
-				name: `stream_status_value`,
+				name: `Stream Status (Value)`,
+				variableId: `stream_status_value`,
 			},
 			{
-				label: `Stream Status`,
-				name: `stream_status`,
+				name: `Stream Status`,
+				variableId: `stream_status`,
 			},
 			{
-				label: `Available drive space (%)`,
-				name: `storage_media_available`,
+				name: `Available drive space (%)`,
+				variableId: `storage_media_available`,
 			},
 			{
-				label: `Helo Variable BeerGoggles`,
-				name: `beer_goggles`,
+				name: `Helo Variable BeerGoggles`,
+				variableId: `beer_goggles`,
 			},
 		])
 	},
 
 	checkVariables() {
 		let self = this
-		for (var key in self.STATE) {
-			var value = self.STATE[key];
-
-			self.setVariable(key, value)
-		}
-	}
+		self.setVariableValues(self.STATE)
+	},
 }
