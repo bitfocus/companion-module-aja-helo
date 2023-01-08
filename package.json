@@ -12,7 +12,7 @@
 		"url": "git+https://github.com/bitfocus/companion-module-aja-helo.git"
 	},
 	"dependencies": {
-		"@companion-module/base": "~1.0.0",
+		"@companion-module/base": "~1.0.2",
 		"node-fetch": "^2.6.0"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
