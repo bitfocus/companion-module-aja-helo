@@ -3,7 +3,7 @@
 	"name": "aja-helo",
 	"shortname": "helo",
 	"description": "Remote control of AJA's HELO recording and streaming appliance.",
-	"version": "2.0.0",
+	"version": "0.0.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-aja-helo.git",
 	"bugs": "https://github.com/bitfocus/companion-module-aja-helo/issues",
