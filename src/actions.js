@@ -20,7 +20,7 @@ module.exports = {
 					let errorText = String(error)
 					if (errorText.match('ECONNREFUSED')) {
 						self.log('error', 'Unable to connect to the streamer...')
-						self.status(this.STATUS_ERROR)
+						self.updateStatus('connection_failure', 'Failed to connect to device')
 					} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
 						self.log('error', 'Connection to streamer has timed out...')
 					} else {
