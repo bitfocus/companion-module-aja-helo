@@ -51,7 +51,7 @@ class HeloInstance extends InstanceBase {
 		self.updateFeedbacks()
 
 		self.updateStatus('connecting', 'Waiting for Config Confirmation')
-		self.configUpdated(config)
+		await self.configUpdated(config)
 	}
 
 	async configUpdated(config) {
