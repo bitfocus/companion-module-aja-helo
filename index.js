@@ -1,4 +1,4 @@
-const { InstanceBase, runEntrypoint } = require('@companion-module/base')
+const { InstanceBase, InstanceStatus, runEntrypoint } = require('@companion-module/base')
 
 const config = require('./src/config')
 const variables = require('./src/variables')
@@ -50,21 +50,31 @@ class HeloInstance extends InstanceBase {
 
 		self.updateFeedbacks()
 
-		self.updateStatus('connecting', 'Waiting for Config Confirmation')
+		self.updateStatus(InstanceStatus.Connecting, 'Waiting for Config Confirmation')
 		await self.configUpdated(config)
 	}
 
 	async configUpdated(config) {
 		let self = this
-
 		if (config) {
 			self.config = config
 		}
-
 		// Quickly check if certain config values are present and continue setup
-		if (self.config.host) {
+		if (self.config.host && self.config.port) {
+			self.updateStatus(InstanceStatus.Connecting, 'Config Updated')
 			// update our connection in case host has changed
 			self.connection = new Helo(self.config)
+
+			// Test to confirm connection
+			// Simply send a request to get the current media available
+			let result = await self.connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
+			if (result.status != 'success') {
+				self.updateStatus(
+					InstanceStatus.ConnectionFailure,
+					`Could not connect to Helo @ http://${self.config.host}:${self.config.port}`
+				)
+				return
+			}
 
 			// Start polling for settings values
 			self.initPolling()
@@ -74,8 +84,7 @@ class HeloInstance extends InstanceBase {
 			// Update the actions
 			self.updateActions()
 
-			// Set status to OK
-			self.updateStatus('ok')
+			self.updateStatus(InstanceStatus.Ok)
 		}
 	}
 

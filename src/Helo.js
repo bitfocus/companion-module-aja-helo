@@ -1,5 +1,3 @@
-const fetch = require('node-fetch')
-
 class Helo {
 	constructor(config) {
 		const apiHost = config.host

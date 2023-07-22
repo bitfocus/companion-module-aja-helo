@@ -1,3 +1,4 @@
+const { InstanceStatus } = require('@companion-module/base')
 module.exports = {
 	/**
 	 * Inits the polling logic
@@ -48,7 +49,7 @@ module.exports = {
 				self.log('debug', 'RecordStatePoll result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus('connection_failure', 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					return
 				}
 
@@ -60,7 +61,7 @@ module.exports = {
 				self.log('debug', 'StreamStatePoll result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus('connection_failure', 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					return
 				}
 
@@ -71,7 +72,7 @@ module.exports = {
 				self.log('debug', 'MediaAvailablePoll result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus('connection_failure', 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					return
 				}
 
@@ -80,7 +81,7 @@ module.exports = {
 				result = await self.connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
 
 				if (result.status === 'failed') {
-					self.updateStatus('connection_failure', 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					return
 				}
 
