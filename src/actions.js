@@ -1,3 +1,5 @@
+const { InstanceStatus } = require('@companion-module/base')
+
 module.exports = {
 	updateActions() {
 		let self = this // required to have referenec to outer `this`
@@ -12,15 +14,15 @@ module.exports = {
 					self.log('debug', 'Command result: ' + JSON.stringify(result))
 
 					if (result.status === 'success') {
-						self.updateStatus('ok')
+						self.updateStatus(InstanceStatus.Ok)
 					} else {
-						self.updateStatus('connection_failure', 'Failed to connect to device')
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					}
 				} catch (error) {
 					let errorText = String(error)
 					if (errorText.match('ECONNREFUSED')) {
 						self.log('error', 'Unable to connect to the streamer...')
-						self.updateStatus('connection_failure', 'Failed to connect to device')
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
 					} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
 						self.log('error', 'Connection to streamer has timed out...')
 					} else {
