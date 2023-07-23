@@ -4,7 +4,7 @@ module.exports = {
 		return [
 			{
 				type: 'static-text',
-				id: 'info',
+				id: 'info_module',
 				width: 12,
 				label: 'Information',
 				value:
@@ -14,14 +14,14 @@ module.exports = {
 				type: 'textinput',
 				id: 'host',
 				width: 8,
-				label: 'Target IP',
+				label: 'Target IP (required)',
 				regex: Regex.IP,
 			},
 			{
 				type: 'number',
 				id: 'port',
 				width: 6,
-				label: 'Target Port',
+				label: 'Target Port (required)',
 				default: '80',
 				regex: Regex.PORT,
 			},
@@ -37,30 +37,52 @@ module.exports = {
 			},
 			{
 				type: 'static-text',
-				id: 'info',
+				id: 'info_polling',
 				width: 12,
 				label: 'Polling',
 				value:
-					'When you need your variables to be up to date all the time, you have to enable polling. The module will query the streamer periodically for the latest values.',
+					'Enable polling for variables / feedback. The module will query the streamer API periodically for the latest values.',
 			},
 			{
 				type: 'checkbox',
 				id: 'enable_polling',
 				label: 'Enable Polling?',
-				width: 6,
+				width: 4,
 				default: true,
 			},
 			{
 				type: 'dropdown',
 				label: 'Polling Rate',
 				id: 'polling_rate',
-				width: 6,
+				isVisible: (configValues) => configValues.enable_polling === true,
+				width: 8,
 				default: 10000,
 				choices: [
 					{ id: 5000, label: '5000ms' },
 					{ id: 10000, label: '10000ms' },
 					{ id: 30000, label: '30000ms' },
 				],
+			},
+			{
+				type: 'static-text',
+				id: 'info_auth',
+				width: 12,
+				label: 'Authentication',
+				value: 'Provide a password to authenticate to the streamer with.',
+			},
+			{
+				type: 'checkbox',
+				id: 'auth_required',
+				label: 'Require password?',
+				width: 4,
+				default: false,
+			},
+			{
+				type: 'textinput',
+				id: 'auth_password',
+				width: 8,
+				label: 'Password',
+				isVisible: (configValues) => configValues.auth_required === true,
 			},
 		]
 	},
