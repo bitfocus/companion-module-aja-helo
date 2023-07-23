@@ -5,12 +5,12 @@ module.exports = {
 		let self = this // required to have referenec to outer `this`
 		let actions = {}
 
-		const sendCommand = (cmd) => {
+		const sendCommand = async (cmd) => {
 			let self = this
 			let prefix = 'action=set&paramid=eParamID_'
 			if (cmd !== undefined) {
 				try {
-					const result = self.connection.sendRequest(prefix + cmd)
+					const result = await self.connection.sendRequest(prefix + cmd)
 					self.log('debug', 'Command result: ' + JSON.stringify(result))
 
 					if (result.status === 'success') {
@@ -51,7 +51,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = event.options.command
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -66,7 +66,7 @@ module.exports = {
 				} else {
 					cmd += '2'
 				}
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -81,7 +81,7 @@ module.exports = {
 				} else {
 					cmd += '4'
 				}
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -104,7 +104,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = event.options.input
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -128,7 +128,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = event.options.input
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -151,7 +151,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = event.options.level
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -174,7 +174,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = 'DelayAudioMs&value=' + event.options.audioDelay
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -183,7 +183,7 @@ module.exports = {
 			options: [],
 			callback: async (event) => {
 				let cmd = 'AVMute&value=1'
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -192,7 +192,7 @@ module.exports = {
 			options: [],
 			callback: async (event) => {
 				let cmd = 'AVMute&value=0'
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -233,7 +233,7 @@ module.exports = {
 				],
 				callback: async (event) => {
 					let cmd = event.options.profileType + event.options.profileNum
-					sendCommand(cmd)
+					await sendCommand(cmd)
 				},
 			}
 		}
@@ -250,7 +250,7 @@ module.exports = {
 			],
 			callback: async (event) => {
 				let cmd = 'FilenamePrefix&value=' + event.options.fileName
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -270,7 +270,7 @@ module.exports = {
 			callback: async (event) => {
 				let cmd = 'FilenamePrefix&value='
 				cmd += await self.parseVariablesInString(event.options.name)
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -280,7 +280,7 @@ module.exports = {
 			callback: async (event) => {
 				let timeStamp = self.renameTimestamp()
 				let cmd = 'FilenamePrefix&value=' + timeStamp
-				sendCommand(cmd)
+				await sendCommand(cmd)
 			},
 		}
 
@@ -309,7 +309,7 @@ module.exports = {
 				],
 				callback: async (event) => {
 					let cmd = 'LayoutSelector&value=' + event.options.layout
-					sendCommand(cmd)
+					await sendCommand(cmd)
 				},
 			}
 
@@ -348,8 +348,8 @@ module.exports = {
 					},
 				],
 				callback: async (event) => {
-					sendCommand('LayoutSelector&value=' + event.options.layout)
-					//sendCommand('LayoutCommand&value=' + event.options.action);
+					await sendCommand('LayoutSelector&value=' + event.options.layout)
+					//await sendCommand('LayoutCommand&value=' + event.options.action);
 					setTimeout(function () {
 						sendCommand('LayoutCommand&value=' + event.options.action)
 					}, 20)
@@ -361,7 +361,7 @@ module.exports = {
 				options: [],
 				callback: async (event) => {
 					let cmd = 'LayoutCommand&value=1'
-					sendCommand(cmd)
+					await sendCommand(cmd)
 				},
 			}
 
@@ -369,7 +369,7 @@ module.exports = {
 				label: 'Store Selected Layout',
 				callback: function (action, bank) {
 					let cmd = 'LayoutCommand&value=2';
-					sendCommand(cmd);
+					await sendCommand(cmd);
 				}
 			};*/
 		}

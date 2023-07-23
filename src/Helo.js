@@ -76,6 +76,7 @@ class Helo {
 				response: await response.json(),
 			}
 		} catch (err) {
+			this.instance.log('info', 'An error occured: ' + JSON.stringify(err))
 			return {
 				status: 'failed',
 				response: String(err),
