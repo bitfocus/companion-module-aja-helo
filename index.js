@@ -50,7 +50,6 @@ class HeloInstance extends InstanceBase {
 
 		self.updateFeedbacks()
 
-		self.updateStatus(InstanceStatus.Connecting, 'Waiting for Config Confirmation')
 		await self.configUpdated(config)
 	}
 
@@ -63,16 +62,14 @@ class HeloInstance extends InstanceBase {
 		if (self.config.host && self.config.port) {
 			self.updateStatus(InstanceStatus.Connecting, 'Config Updated')
 			// update our connection in case host has changed
-			self.connection = new Helo(self.config)
+			self.connection = new Helo(self, self.config)
 
 			// Test to confirm connection
 			// Simply send a request to get the current media available
 			let result = await self.connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
 			if (result.status != 'success') {
-				self.updateStatus(
-					InstanceStatus.ConnectionFailure,
-					`Could not connect to Helo @ http://${self.config.host}:${self.config.port}`
-				)
+				self.log('error', 'Confirm connection Failure: ' + JSON.stringify(result))
+				self.updateStatus(InstanceStatus.ConnectionFailure, `Could not connect to Helo @ ${self.connection.baseUrl}`)
 				return
 			}
 
@@ -85,6 +82,8 @@ class HeloInstance extends InstanceBase {
 			self.updateActions()
 
 			self.updateStatus(InstanceStatus.Ok)
+		} else {
+			self.updateStatus(InstanceStatus.BadConfig, 'Missing required values')
 		}
 	}
 
