@@ -5,14 +5,18 @@ module.exports = {
 	 */
 	initPolling() {
 		let self = this
+
+		let pollingErrorMsg = 'Failed to connect to device during polling'
+
 		// Cleanup old interval
 		if (self.pollingInterval) {
 			clearInterval(self.pollingInterval)
+			self.log('info', `polling: Polling ${self.config.host} stopped...`)
 		}
 
 		// Setup polling if enabled and host is set
 		if (self.config.enable_polling && self.config.host) {
-			self.log('debug', `Polling ${self.config.host} started...`)
+			self.log('info', `polling: Polling ${self.config.host} started...`)
 			self.pollingInterval = setInterval(async () => {
 				let updated = false
 				if (self.STATE.NameCounter == 0) {
@@ -46,10 +50,10 @@ module.exports = {
 				}
 				// Now get the record status
 				let result = await self.connection.sendRequest('action=get&paramid=eParamID_ReplicatorRecordState')
-				self.log('debug', 'RecordStatePoll result: ' + JSON.stringify(result))
+				self.log('debug', 'polling: RecordState result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, pollingErrorMsg)
 					return
 				}
 
@@ -58,10 +62,10 @@ module.exports = {
 
 				// Now get the stream status
 				result = await self.connection.sendRequest('action=get&paramid=eParamID_ReplicatorStreamState')
-				self.log('debug', 'StreamStatePoll result: ' + JSON.stringify(result))
+				self.log('debug', 'polling: StreamState result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, pollingErrorMsg)
 					return
 				}
 
@@ -69,10 +73,10 @@ module.exports = {
 				self.STATE.stream_status = result.response.value_name
 
 				result = await self.connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
-				self.log('debug', 'MediaAvailablePoll result: ' + JSON.stringify(result))
+				self.log('debug', 'polling: MediaAvailable result: ' + JSON.stringify(result))
 
 				if (result.status === 'failed') {
-					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, pollingErrorMsg)
 					return
 				}
 
@@ -81,7 +85,7 @@ module.exports = {
 				result = await self.connection.sendRequest('action=get&paramid=eParamID_BeerGoggles')
 
 				if (result.status === 'failed') {
-					self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
+					self.updateStatus(InstanceStatus.ConnectionFailure, pollingErrorMsg)
 					return
 				}
 

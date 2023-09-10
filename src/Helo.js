@@ -34,9 +34,9 @@ class Helo {
 			let cookies = response.headers.getSetCookie()
 			if (cookies.length == 1) {
 				this.session = cookies[0]
-				this.instance.log('info', 'Successful Authentication')
+				this.instance.log('info', 'auth: Successful Authentication')
 			} else {
-				this.instance.log('info', 'Bad Cookies: ' + JSON.stringify(cookies))
+				this.instance.log('error', 'auth: Bad Cookies: ' + JSON.stringify(cookies))
 			}
 		} else {
 			this.session = null
@@ -65,7 +65,7 @@ class Helo {
 				response = await fetch(requestUrl, requestOptions)
 			}
 			if (!response.ok) {
-				this.instance.log('info', 'Bad response: ' + JSON.stringify(response))
+				this.instance.log('error', 'api call: bad response from device: ' + JSON.stringify(response))
 				return {
 					status: 'failed',
 					response: 'Device returned a bad response: ' + response.statusText,
@@ -76,7 +76,7 @@ class Helo {
 				response: await response.json(),
 			}
 		} catch (err) {
-			this.instance.log('info', 'An error occured: ' + JSON.stringify(err))
+			this.instance.log('error', 'api call: An error occured: ' + JSON.stringify(err))
 			return {
 				status: 'failed',
 				response: String(err),

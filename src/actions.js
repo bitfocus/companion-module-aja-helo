@@ -11,12 +11,12 @@ module.exports = {
 			if (cmd !== undefined) {
 				try {
 					const result = await self.connection.sendRequest(prefix + cmd)
-					self.log('debug', 'Command result: ' + JSON.stringify(result))
+					self.log('debug', 'action call: Command result: ' + JSON.stringify(result))
 
 					if (result.status === 'success') {
 						self.updateStatus(InstanceStatus.Ok)
 					} else {
-						self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device')
+						self.updateStatus(InstanceStatus.ConnectionFailure, 'Failed to connect to device: ' + result.response)
 					}
 				} catch (error) {
 					let errorText = String(error)
@@ -26,7 +26,7 @@ module.exports = {
 					} else if (errorText.match('ETIMEDOUT') || errorText.match('ENOTFOUND')) {
 						self.log('error', 'Connection to streamer has timed out...')
 					} else {
-						self.log('error', 'An error has occurred when connecting to streamer...')
+						self.log('error', 'An error has occurred when connecting to streamer: ' + errorText)
 					}
 				}
 			}

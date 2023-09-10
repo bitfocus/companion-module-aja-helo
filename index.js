@@ -68,7 +68,7 @@ class HeloInstance extends InstanceBase {
 			// Simply send a request to get the current media available
 			let result = await self.connection.sendRequest('action=get&paramid=eParamID_CurrentMediaAvailable')
 			if (result.status != 'success') {
-				self.log('info', 'Confirm connection: ' + JSON.stringify(result))
+				self.log('error', 'Confirm connection Failure: ' + JSON.stringify(result))
 				self.updateStatus(InstanceStatus.ConnectionFailure, `Could not connect to Helo @ ${self.connection.baseUrl}`)
 				return
 			}
