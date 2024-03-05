@@ -246,9 +246,11 @@ module.exports = {
 					label: 'file name',
 					id: 'fileName',
 					tooltip: 'Set the base filename for recordings.',
+					useVariables: true,
 				},
 			],
 			callback: async (event) => {
+				let fileName = await self.parseVariablesInString(event.options.fileName);
 				let cmd = 'FilenamePrefix&value=' + event.options.fileName
 				await sendCommand(cmd)
 			},
