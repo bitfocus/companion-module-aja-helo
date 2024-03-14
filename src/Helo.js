@@ -83,6 +83,60 @@ class Helo {
 			}
 		}
 	}
+
+	async sendCustomRequest(url, cmd, body, method) {
+		let requestUrl = this.baseUrl + url + cmd
+
+		/*var formBody = [];
+		for (var property in body) {
+			var encodedKey = encodeURIComponent(property);
+			var encodedValue = encodeURIComponent(details[property]);
+			formBody.push(encodedKey + "=" + encodedValue);
+		}
+		formBody = formBody.join("&");*/
+
+		let requestOptions = {
+			method: method,
+			headers: {
+				'Content-Type': 'application/x-www-form-urlencoded',
+			},
+			body: new URLSearchParams(body).toString(),
+		}
+
+		if (this.auth_required) {
+			if (this.session === null) {
+				await this.authenticate()
+			}
+			requestOptions['headers'] = { cookie: this.session }
+		}
+
+		try {
+			let response = await fetch(requestUrl, requestOptions)
+			if (response.status == 404 && this.auth_required) {
+				// in the case of a 404 with auth required most likely case is session expiry
+				// reauthenticate and try again
+				await this.authenticate()
+				response = await fetch(requestUrl, requestOptions)
+			}
+			if (!response.ok) {
+				this.instance.log('error', 'api call: bad response from device: ' + JSON.stringify(response))
+				return {
+					status: 'failed',
+					response: 'Device returned a bad response: ' + response.statusText,
+				}
+			}
+			return {
+				status: 'success',
+				response: await response.json(),
+			}
+		} catch (err) {
+			this.instance.log('error', 'api call: An error occured: ' + JSON.stringify(err))
+			return {
+				status: 'failed',
+				response: String(err),
+			}
+		}
+	}
 }
 
 module.exports = Helo

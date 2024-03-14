@@ -376,6 +376,20 @@ module.exports = {
 			};*/
 		}
 
+		actions.eraseAllClips = {
+			name: 'Erase All Clips',
+			options: [],
+			callback: async (event) => {
+				let body = {
+					'action': 'delete',
+					'recdest': '0',
+					'clipname': '*'
+				}
+				const result = await self.connection.sendCustomRequest('/clips', '', body, 'POST')
+				self.log('debug', 'action call: Command result: ' + JSON.stringify(result))
+			},
+		}
+
 		self.setActionDefinitions(actions)
 	},
 }

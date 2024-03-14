@@ -58,6 +58,10 @@ class HeloInstance extends InstanceBase {
 		if (config) {
 			self.config = config
 		}
+
+		// Update the actions
+		self.updateActions() //build actions regardless of connection status
+
 		// Quickly check if certain config values are present and continue setup
 		if (self.config.host && self.config.port) {
 			self.updateStatus(InstanceStatus.Connecting, 'Config Updated')
@@ -78,8 +82,6 @@ class HeloInstance extends InstanceBase {
 
 			// Init the presets
 			self.presets()
-			// Update the actions
-			self.updateActions()
 
 			self.updateStatus(InstanceStatus.Ok)
 		} else {
