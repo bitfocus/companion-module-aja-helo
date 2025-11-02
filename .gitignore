@@ -1,4 +1,13 @@
 node_modules
+.npm
+
 /pkg
 /pkg.tgz
-.DS_Store
+
+.devcontainer
+
+out/
+
+.env
+.env.*
+!.env.example
