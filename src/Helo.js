@@ -47,6 +47,7 @@ class Helo {
 		let requestUrl = this.baseUrl + '/config?' + cmd
 		let requestOptions = {
 			method: 'GET',
+			signal: AbortSignal.timeout(2000), // prevents config init loop on connection failure
 		}
 
 		if (this.auth_required) {
@@ -56,19 +57,21 @@ class Helo {
 			requestOptions['headers'] = { cookie: this.session }
 		}
 
+		this.instance.log('debug', `api call: ${cmd}`)
 		try {
 			let response = await fetch(requestUrl, requestOptions)
 			if (response.status == 404 && this.auth_required) {
 				// in the case of a 404 with auth required most likely case is session expiry
 				// reauthenticate and try again
 				await this.authenticate()
+				this.instance.log('debug', `api call: retrying request ('${cmd}') after reauth`)
 				response = await fetch(requestUrl, requestOptions)
 			}
 			if (!response.ok) {
-				this.instance.log('error', 'api call: bad response from device: ' + JSON.stringify(response))
+				this.instance.log('error', `api call: bad response from device: ${JSON.stringify(response)}`)
 				return {
 					status: 'failed',
-					response: 'Device returned a bad response: ' + response.statusText,
+					response: `Device returned a bad response: ${response.statusText}`,
 				}
 			}
 			return {
@@ -76,7 +79,7 @@ class Helo {
 				response: await response.json(),
 			}
 		} catch (err) {
-			this.instance.log('error', 'api call: An error occured: ' + JSON.stringify(err))
+			this.instance.log('error', `api call: An error occurred: ${JSON.stringify(err)}`)
 			return {
 				status: 'failed',
 				response: String(err),
