@@ -47,7 +47,7 @@ module.exports = {
 				type: 'checkbox',
 				id: 'enable_polling',
 				label: 'Enable Polling?',
-				width: 4,
+				width: 2,
 				default: true,
 			},
 			{
@@ -55,12 +55,28 @@ module.exports = {
 				label: 'Polling Rate',
 				id: 'polling_rate',
 				isVisible: (configValues) => configValues.enable_polling === true,
-				width: 8,
+				width: 3,
 				default: 10000,
 				choices: [
-					{ id: 5000, label: '5000ms' },
-					{ id: 10000, label: '10000ms' },
-					{ id: 30000, label: '30000ms' },
+					{ id: 5000, label: '5s' },
+					{ id: 10000, label: '10s' },
+					{ id: 30000, label: '30s' },
+				],
+			},
+			{
+				type: 'dropdown',
+				label: 'Name Refresh Rate',
+				id: 'name_refresh_rate',
+				description: 'How often the profile/layout/preset names are refreshed from the device.',
+				isVisible: (configValues) => configValues.enable_polling === true,
+				width: 7,
+				default: 180000,
+				choices: [
+					{ id: 60000, label: '1m' },
+					{ id: 180000, label: '3m' },
+					{ id: 300000, label: '5m' },
+					{ id: 600000, label: '10m' },
+					{ id: -1, label: 'On Config Update' },
 				],
 			},
 			{
@@ -79,6 +95,8 @@ module.exports = {
 			},
 			{
 				type: 'textinput',
+				// type: 'secret-text',
+				// Added in @companion-module/base v1.13.0, required Companion v4.1+
 				id: 'auth_password',
 				width: 8,
 				label: 'Password',

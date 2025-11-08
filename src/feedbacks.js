@@ -132,6 +132,32 @@ module.exports = {
 			},
 		}
 
+		feedbacks.deviceTemperature = {
+			type: 'boolean',
+			name: 'Device Temperature',
+			description: 'Indicate if the device temperature is above a certain threshold',
+			defaultStyle: {
+				color: black,
+				bgcolor: orange,
+			},
+			options: [
+				{
+					type: 'number',
+					label: 'Indicate on greater than X °C',
+					id: 'checkValue',
+					default: 5,
+				},
+			],
+			callback: function (feedback) {
+				let opt = feedback.options
+
+				if (self.STATE.device_temperature > opt.checkValue) {
+					return true
+				}
+				return false
+			},
+		}
+
 		self.setFeedbackDefinitions(feedbacks)
 	},
 }

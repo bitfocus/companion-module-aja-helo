@@ -15,6 +15,7 @@ class Helo {
 	}
 
 	async authenticate() {
+		// https://gitlab.aja.com/pub/rest_api/-/blob/master/HELO/03_HELO_Commands.md?ref_type=heads#example-get-record-state-with-authentication-enabled
 		let requestUrl = this.baseUrl + '/authenticator/login'
 
 		let requestOptions = {
@@ -46,7 +47,7 @@ class Helo {
 	}
 
 	async sendRequest(cmd) {
-		this.sendCustomRequest('/config?', cmd, {}, 'GET')
+		return this.sendCustomRequest('/config?', cmd, null, 'GET')
 	}
 
 	async sendCustomRequest(url, cmd, body, method) {
@@ -55,13 +56,17 @@ class Helo {
 		let requestOptions = {
 			method: method,
 			headers: new Headers(),
-			body: new URLSearchParams(body).toString(), // NOTE: this is URLSearchParams, not JSON
 			signal: AbortSignal.timeout(2000), // adds timeout to fetch requests
 			// Without timeout, failed requests can hang and cause config loading to fail
 		}
 		// Set content-type for methods with body
-		if ((['POST', 'PUT', 'PATCH'].includes(method.toUpperCase())) && (typeof body === 'object' && Object.keys(body).length > 0)) {
+		if (
+			['POST', 'PUT', 'PATCH'].includes(method.toUpperCase()) &&
+			typeof body === 'object' &&
+			Object.keys(body).length > 0
+		) {
 			requestOptions['headers'].append('Content-Type', 'application/x-www-form-urlencoded')
+			requestOptions['body'] = new URLSearchParams(body).toString() // NOTE: this is URLSearchParams, not JSON
 		}
 
 		// Set cookie for authenticated requests
