@@ -18,6 +18,8 @@ module.exports = {
 		if (self.config.enable_polling && self.config.host) {
 			self.log('info', `polling: Polling ${self.config.host} started...`)
 			self.pollingInterval = setInterval(async () => {
+				// If expanding polling to additional paramaters, consider using events feature
+				// http://<device-ip>/rest.tml -> Events
 				let updated = false
 				if (
 					// Update names if:
@@ -141,7 +143,7 @@ module.exports = {
 					['scheduler_current_event', 'eParamID_SchedulerCurrentEvent'],
 					['scheduler_next_event', 'eParamID_SchedulerNextEvent'],
 				]
-				for (const [state, param] of duration_vars) {
+				for (const [state, param] of standard_vars) {
 					result = await self.connection.sendRequest(`action=get&paramid=${param}`)
 
 					if (result.status === 'failed') {

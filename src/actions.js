@@ -236,9 +236,11 @@ module.exports = {
 				],
 				callback: async (event) => {
 					let cmd =
-						event.options.profileType + '&value=' + event.options.profileType === 'RecordingProfileSel'
+						event.options.profileType +
+						'&value=' +
+						(event.options.profileType === 'RecordingProfileSel'
 							? event.options.recordingProfileNum
-							: event.options.streamingProfileNum
+							: event.options.streamingProfileNum)
 					await sendCommand(cmd)
 				},
 			}
@@ -357,11 +359,11 @@ module.exports = {
 				},
 			],
 			callback: async (event) => {
-				let cmd = 'eParamID_RegisterRecall&value=' + event.options.preset
+				let cmd = 'RegisterRecall&value=' + event.options.layout
 				await sendCommand(cmd)
 				setTimeout(async function () {
-					const result = await self.connection.sendRequest('action=set&paramid=eParamID_RegisterRecallResult')
-					self.log('info', 'Recall Preset Result: ' + JSON.stringify(result['response']))
+					const result = await self.connection.sendRequest('action=get&paramid=eParamID_RegisterRecallResult')
+					self.log('info', `Recall Preset ${event.options.layout}: ${JSON.stringify(result['response']['value_name'])}`)
 				}, 1000)
 			},
 		}
@@ -407,11 +409,11 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Determine what should be active during a scheduled event',
 					id: 'activity',
-					default: 'SchedulerActivity&value=0',
+					default: 'SchedulerActivity&value=1',
 					choices: [
-						{ id: 'SchedulerActivity&value=0', label: 'Record Only' },
-						{ id: 'SchedulerActivity&value=1', label: 'Stream Only' },
-						{ id: 'SchedulerActivity&value=2', label: 'Record and Stream' },
+						{ id: 'SchedulerActivity&value=1', label: 'Record Only' },
+						{ id: 'SchedulerActivity&value=2', label: 'Stream Only' },
+						{ id: 'SchedulerActivity&value=3', label: 'Record and Stream' },
 					],
 				},
 			],
@@ -426,8 +428,8 @@ module.exports = {
 			options: [
 				{
 					type: 'dropdown',
-					label: 'Choose Recording Stream',
-					id: 'destination',
+					label: 'Select Recording Destination Type',
+					id: 'type',
 					default: 'Primary',
 					choices: [
 						{ id: 'Primary', label: 'Primary' },
@@ -436,7 +438,7 @@ module.exports = {
 				},
 				{
 					type: 'dropdown',
-					label: 'Choose Recording Destination',
+					label: 'Recording Destination',
 					id: 'destination',
 					default: 'RecordingDestination&value=0',
 					choices: [
@@ -445,11 +447,11 @@ module.exports = {
 						{ id: 'RecordingDestination&value=2', label: 'SMB Network Share' },
 						{ id: 'RecordingDestination&value=3', label: 'NFS Network Share' },
 					],
-					isVisible: (options) => options.destination === 'Primary',
+					isVisible: (options) => options.type === 'Primary',
 				},
 				{
 					type: 'dropdown',
-					label: 'Choose Recording Destination',
+					label: 'Secondary Recording Destination',
 					id: 'destinationSecondary',
 					default: 'SecondaryRecordingDestination&value=4',
 					choices: [
@@ -457,12 +459,11 @@ module.exports = {
 						{ id: 'SecondaryRecordingDestination&value=0', label: 'SD' },
 						{ id: 'SecondaryRecordingDestination&value=1', label: 'USB' },
 					],
-					isVisible: (options) => options.destination === 'Secondary',
+					isVisible: (options) => options.type === 'Secondary',
 				},
 			],
 			callback: async (event) => {
-				let cmd =
-					event.options.destination === 'Primary' ? event.options.destination : event.options.destinationSecondary
+				let cmd = event.options.type === 'Primary' ? event.options.destination : event.options.destinationSecondary
 				await sendCommand(cmd)
 			},
 		}

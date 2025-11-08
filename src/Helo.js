@@ -51,7 +51,11 @@ class Helo {
 	}
 
 	async sendCustomRequest(url, cmd, body, method) {
-		this.instance.log('debug', `api call: ${method} request to ${url}${cmd} with body: ${JSON.stringify(body)}`)
+		if (body === undefined || body === null) {
+			this.instance.log('debug', `api call: ${method} request to ${url}${cmd}`)
+		} else {
+			this.instance.log('debug', `api call: ${method} request to ${url}${cmd} with body: ${JSON.stringify(body)}`)
+		}
 		let requestUrl = this.baseUrl + url + cmd
 		let requestOptions = {
 			method: method,
