@@ -28,6 +28,7 @@ class HeloInstance extends InstanceBase {
 	async init(config) {
 		let self = this
 
+		self.updateStatus(InstanceStatus.Connecting, 'Initializing')
 		self.STATE = {
 			recorder_status_value: 0,
 			recorder_status: 'eRRSUninitialized',
@@ -35,15 +36,19 @@ class HeloInstance extends InstanceBase {
 			stream_status: 'eRRSUninitialized',
 			storage_media_available: 0,
 			beer_goggles: 'No Beer...',
-			NameCounter: 0,
+			recording_duration: '00:00:00:00',
+			streaming_duration: '00:00:00:00',
+			device_temperature: 0,
+			scheduler_current_event: null,
+			scheduler_next_event: null,
+			LastNameUpdateTime: 0,
 			RecordingProfileNames: Array.from(Array(10)).map((e, i) => `${i + 1}`),
 			StreamingProfileNames: Array.from(Array(10)).map((e, i) => `${i + 1}`),
 			LayoutNames: Array.from(Array(10)).map((e, i) => `Layout ${i + 1}`),
+			PresetNames: Array.from(Array(20)).map((e, i) => `Preset #${i + 1}`),
 		}
 
 		self.pollingInterval = undefined
-
-		self.config = config
 
 		// Update Variables
 		self.updateVariableDefinitions()
@@ -55,15 +60,15 @@ class HeloInstance extends InstanceBase {
 
 	async configUpdated(config) {
 		let self = this
-		if (config) {
-			self.config = config
-		}
-
+		self.log('debug', 'Module Config: ' + JSON.stringify(config))
+		self.config = config
+		self.STATE.LastNameUpdateTime = 0
 		// Update the actions
 		self.updateActions() //build actions regardless of connection status
 
 		// Quickly check if certain config values are present and continue setup
 		if (self.config.host && self.config.port) {
+			self.log('debug', 'Host and Port set, continuing setup')
 			self.updateStatus(InstanceStatus.Connecting, 'Config Updated')
 			// update our connection in case host has changed
 			self.connection = new Helo(self, self.config)
@@ -85,6 +90,7 @@ class HeloInstance extends InstanceBase {
 
 			self.updateStatus(InstanceStatus.Ok)
 		} else {
+			self.log('debug', self.config.host ? 'Port not set' : 'Host not set')
 			self.updateStatus(InstanceStatus.BadConfig, 'Missing required values')
 		}
 	}

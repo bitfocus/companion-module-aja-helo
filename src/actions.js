@@ -205,34 +205,42 @@ module.exports = {
 						label: 'Set Profile',
 						id: 'profileType',
 						width: 12,
-						default: 'RecordingProfileSel&value=',
+						default: 'RecordingProfileSel',
 						choices: [
-							{ id: 'RecordingProfileSel&value=', label: 'Record Profile' },
-							{ id: 'StreamingProfileSel&value=', label: 'Stream Profile' },
+							{ id: 'RecordingProfileSel', label: 'Record Profile' },
+							{ id: 'StreamingProfileSel', label: 'Stream Profile' },
 						],
 					},
 					{
 						type: 'dropdown',
-						label: 'Choose Profile 1-10',
-						id: 'profileNum',
+						label: 'Choose Recording Profile',
+						id: 'recordingProfileNum',
 						width: 12,
 						default: '0',
-						choices: [
-							{ id: '0', label: '1' },
-							{ id: '1', label: '2' },
-							{ id: '2', label: '3' },
-							{ id: '3', label: '4' },
-							{ id: '4', label: '5' },
-							{ id: '5', label: '6' },
-							{ id: '6', label: '7' },
-							{ id: '7', label: '8' },
-							{ id: '8', label: '9' },
-							{ id: '9', label: '10' },
-						],
+						choices: Array.from(Array(10)).map((e, i) => {
+							return { id: i.toString(), label: self.STATE.RecordingProfileNames[i] }
+						}),
+						isVisible: (options) => options.profileType === 'RecordingProfileSel',
+					},
+					{
+						type: 'dropdown',
+						label: 'Choose Streaming Profile',
+						id: 'streamingProfileNum',
+						width: 12,
+						default: '0',
+						choices: Array.from(Array(10)).map((e, i) => {
+							return { id: i.toString(), label: self.STATE.StreamingProfileNames[i] }
+						}),
+						isVisible: (options) => options.profileType === 'StreamingProfileSel',
 					},
 				],
 				callback: async (event) => {
-					let cmd = event.options.profileType + event.options.profileNum
+					let cmd =
+						event.options.profileType +
+						'&value=' +
+						(event.options.profileType === 'RecordingProfileSel'
+							? event.options.recordingProfileNum
+							: event.options.streamingProfileNum)
 					await sendCommand(cmd)
 				},
 			}
@@ -250,28 +258,7 @@ module.exports = {
 				},
 			],
 			callback: async (event) => {
-				let fileName = await self.parseVariablesInString(event.options.fileName);
 				let cmd = 'FilenamePrefix&value=' + event.options.fileName
-				await sendCommand(cmd)
-			},
-		}
-
-		actions.renameFileFromVariable = {
-			name: 'Rename File - Variable',
-			options: [
-				{
-					type: 'textinput',
-					useVariables: true,
-					label: 'Variable name',
-					id: 'name',
-					default: '',
-					tooltip: 'You must provide the full variable name.\nFor example "$(internal:custom_my_cool_variable)"',
-					regex: '$(([^:)]+):([^)]+))/g', // From instance_skel.js setPresetDefinitions
-				},
-			],
-			callback: async (event) => {
-				let cmd = 'FilenamePrefix&value='
-				cmd += await self.parseVariablesInString(event.options.name)
 				await sendCommand(cmd)
 			},
 		}
@@ -295,18 +282,9 @@ module.exports = {
 						type: 'dropdown',
 						id: 'layout',
 						default: 1,
-						choices: [
-							{ id: 1, label: self.STATE.LayoutNames[0] },
-							{ id: 2, label: self.STATE.LayoutNames[1] },
-							{ id: 3, label: self.STATE.LayoutNames[2] },
-							{ id: 4, label: self.STATE.LayoutNames[3] },
-							{ id: 5, label: self.STATE.LayoutNames[4] },
-							{ id: 6, label: self.STATE.LayoutNames[5] },
-							{ id: 7, label: self.STATE.LayoutNames[6] },
-							{ id: 8, label: self.STATE.LayoutNames[7] },
-							{ id: 9, label: self.STATE.LayoutNames[8] },
-							{ id: 10, label: self.STATE.LayoutNames[9] },
-						],
+						choices: Array.from(Array(self.STATE.LayoutNames.length)).map((e, i) => {
+							return { id: i + 1, label: self.STATE.LayoutNames[i] }
+						}),
 					},
 				],
 				callback: async (event) => {
@@ -323,18 +301,9 @@ module.exports = {
 						type: 'dropdown',
 						id: 'layout',
 						default: 1,
-						choices: [
-							{ id: 1, label: 'Layout 1' },
-							{ id: 2, label: 'Layout 2' },
-							{ id: 3, label: 'Layout 3' },
-							{ id: 4, label: 'Layout 4' },
-							{ id: 5, label: 'Layout 5' },
-							{ id: 6, label: 'Layout 6' },
-							{ id: 7, label: 'Layout 7' },
-							{ id: 8, label: 'Layout 8' },
-							{ id: 9, label: 'Layout 9' },
-							{ id: 10, label: 'Layout 10' },
-						],
+						choices: Array.from(Array(self.STATE.LayoutNames.length)).map((e, i) => {
+							return { id: i + 1, label: self.STATE.LayoutNames[i] }
+						}),
 					},
 					{
 						label: 'Action',
@@ -376,17 +345,126 @@ module.exports = {
 			};*/
 		}
 
+		actions.recallPreset = {
+			name: 'Recall Preset',
+			options: [
+				{
+					label: 'Layout',
+					type: 'dropdown',
+					id: 'layout',
+					default: 1,
+					choices: Array.from(Array(self.STATE.PresetNames.length)).map((e, i) => {
+						return { id: i + 1, label: self.STATE.PresetNames[i] }
+					}),
+				},
+			],
+			callback: async (event) => {
+				let cmd = 'RegisterRecall&value=' + event.options.layout
+				await sendCommand(cmd)
+				setTimeout(async function () {
+					const result = await self.connection.sendRequest('action=get&paramid=eParamID_RegisterRecallResult')
+					self.log('info', `Recall Preset ${event.options.layout}: ${JSON.stringify(result['response']['value_name'])}`)
+				}, 1000)
+			},
+		}
+
 		actions.eraseAllClips = {
 			name: 'Erase All Clips',
 			options: [],
 			callback: async (event) => {
 				let body = {
-					'action': 'delete',
-					'recdest': '0',
-					'clipname': '*'
+					action: 'delete',
+					recdest: '0',
+					clipname: '*',
 				}
 				const result = await self.connection.sendCustomRequest('/clips', '', body, 'POST')
 				self.log('debug', 'action call: Command result: ' + JSON.stringify(result))
+			},
+		}
+
+		actions.schedulerEnabled = {
+			name: 'Scheduler Control',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Enable or Disable Scheduler',
+					id: 'enabled',
+					default: 'SchedulerEnabled&value=0',
+					choices: [
+						{ id: 'SchedulerEnabled&value=0', label: 'Disabled' },
+						{ id: 'SchedulerEnabled&value=1', label: 'Enabled' },
+					],
+				},
+			],
+			callback: async (event) => {
+				let cmd = event.options.enabled
+				await sendCommand(cmd)
+			},
+		}
+
+		actions.schedulerActivity = {
+			name: 'Scheduler Activity',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Determine what should be active during a scheduled event',
+					id: 'activity',
+					default: 'SchedulerActivity&value=1',
+					choices: [
+						{ id: 'SchedulerActivity&value=1', label: 'Record Only' },
+						{ id: 'SchedulerActivity&value=2', label: 'Stream Only' },
+						{ id: 'SchedulerActivity&value=3', label: 'Record and Stream' },
+					],
+				},
+			],
+			callback: async (event) => {
+				let cmd = event.options.activity
+				await sendCommand(cmd)
+			},
+		}
+
+		actions.recordingDestination = {
+			name: 'Set Recording Destination',
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Select Recording Destination Type',
+					id: 'type',
+					default: 'Primary',
+					choices: [
+						{ id: 'Primary', label: 'Primary' },
+						{ id: 'Secondary', label: 'Secondary' },
+					],
+				},
+				{
+					type: 'dropdown',
+					label: 'Recording Destination',
+					id: 'destination',
+					default: 'RecordingDestination&value=0',
+					choices: [
+						{ id: 'RecordingDestination&value=0', label: 'SD' },
+						{ id: 'RecordingDestination&value=1', label: 'USB' },
+						{ id: 'RecordingDestination&value=2', label: 'SMB Network Share' },
+						{ id: 'RecordingDestination&value=3', label: 'NFS Network Share' },
+					],
+					isVisible: (options) => options.type === 'Primary',
+				},
+				{
+					type: 'dropdown',
+					label: 'Secondary Recording Destination',
+					id: 'destinationSecondary',
+					default: 'SecondaryRecordingDestination&value=4',
+					choices: [
+						{ id: 'SecondaryRecordingDestination&value=4', label: 'None' },
+						{ id: 'SecondaryRecordingDestination&value=0', label: 'SD' },
+						{ id: 'SecondaryRecordingDestination&value=1', label: 'USB' },
+					],
+					isVisible: (options) => options.type === 'Secondary',
+				},
+			],
+			callback: async (event) => {
+				let cmd = event.options.type === 'Primary' ? event.options.destination : event.options.destinationSecondary
+				await sendCommand(cmd)
 			},
 		}
 
