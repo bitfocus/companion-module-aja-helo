@@ -8,6 +8,7 @@ const presets = require('./src/presets')
 const feedbacks = require('./src/feedbacks')
 const utils = require('./src/util')
 const Helo = require('./src/Helo')
+const UpgradeScripts = require('./src/upgrades')
 
 class HeloInstance extends InstanceBase {
 	constructor(internal) {
@@ -105,4 +106,4 @@ class HeloInstance extends InstanceBase {
 	}
 }
 
-runEntrypoint(HeloInstance, [])
+runEntrypoint(HeloInstance, UpgradeScripts)
