@@ -3,6 +3,11 @@ module.exports = [
 		var updateActions = []
 		for (const action of _props.actions) {
 			if (action.actionId === 'setProfile') {
+				if (action.options.profileType === 'RecordingProfileSel&value=') {
+					action.options.profileType = 'RecordingProfileSel'
+				} else if (action.options.profileType === 'StreamingProfileSel&value=') {
+					action.options.profileType = 'StreamingProfileSel'
+				}
 				if (action.options.profileNum) {
 					action.options.recordingProfileNum = action.options.profileNum
 					delete action.options.profileNum
@@ -20,8 +25,14 @@ module.exports = [
 			}
 		}
 
+		if (_props.config) {
+			if (_props.config.name_refresh_rate === undefined) {
+				_props.config.name_refresh_rate = 300000
+			}
+		}
+
 		return {
-			updatedConfig: null,
+			updatedConfig: _props.config,
 			updatedActions: updateActions,
 			updatedFeedbacks: [],
 		}
