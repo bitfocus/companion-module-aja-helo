@@ -16,6 +16,6 @@
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"devDependencies": {
-		"@companion-module/tools": "^1.3.2"
+		"@companion-module/tools": "^1.5.2"
 	}
 }
