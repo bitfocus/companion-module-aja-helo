@@ -198,7 +198,7 @@ module.exports = {
 
 		actions.reboot = {
 			name: 'Reboot System',
-			description: 'Reboot the HELO using the most recent firmware image',
+			description: 'Reboot the HELO using the most recent firmware image. The device may report errors while it is non-responsive during reboot.',
 			options: [],
 			callback: async (event) => {
 				const result = await self.connection.sendRequest(
