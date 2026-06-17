@@ -12,6 +12,7 @@
 - Enable/Disable Scheduler and configure scheduler actions
 - Rename file
 - Rename file with current timestamp - YYYYMMDD_HHMM
+- Reboot system
 
 Check out the [AJA HELO Support Page](https://www.aja.com/products/helo#support) for firmware updates and hardware support.
 
