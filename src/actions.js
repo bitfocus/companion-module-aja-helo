@@ -196,6 +196,25 @@ module.exports = {
 			},
 		}
 
+		actions.reboot = {
+			name: 'Reboot System',
+			description: 'Reboot the HELO. The device may report errors while it is non-responsive during reboot.',
+			options: [],
+			callback: async (event) => {
+				const result = await self.connection.sendRequest(
+					'action=set&paramid=eParamID_Reboot&value=1&configid=0'
+				)
+				self.log('debug', 'action call: Reboot result: ' + JSON.stringify(result))
+
+				if (result.status === 'success') {
+					self.updateStatus(InstanceStatus.Connecting, 'Reboot command sent')
+				} else {
+					self.log('warn', 'Reboot command did not return cleanly; the HELO may already be rebooting')
+					self.updateStatus(InstanceStatus.Connecting, 'Reboot command sent; waiting for device')
+				}
+			},
+		}
+
 		if (self.config.model == 'classic' || self.config.model == undefined) {
 			actions.setProfile = {
 				name: 'Choose Profiles',

@@ -26,6 +26,7 @@ state = {
     "eParamID_DelayAudioMs": 0,
     "eParamID_AnalogAudioInputLevel": 0,
     "eParamID_BeerGoggles": 0,
+    "eParamID_Reboot": 0,
 }
 
 state = {
