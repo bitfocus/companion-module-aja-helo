@@ -156,6 +156,7 @@ module.exports = {
 
 				self.checkVariables()
 				self.checkFeedbacks()
+				self.updateStatus(InstanceStatus.Ok)
 			}, self.config.polling_rate)
 		}
 	},
