@@ -145,7 +145,7 @@ const server = http.createServer((req, res) => {
 					 *  it's just a duplicate of the "value".
 					 */
 					value_name: valueName,
-				}),
+				})
 			)
 			return
 		}

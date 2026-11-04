@@ -348,7 +348,7 @@ describe('Mock AJA HELO', { concurrency: 1 }, () => {
 					action: 'delete',
 					recdest: '0',
 					clipname: '*',
-				}),
+				})
 			)
 			assert.strictEqual(response.statusCode, 200)
 		})
