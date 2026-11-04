@@ -140,6 +140,8 @@ describe('Companion AJA HELO Module', { concurrency: 1 }, () => {
 	})
 
 	beforeEach(() => {
+		// Keep device reset and delayed-action timers inside each test.
+		mock.timers.enable({ apis: ['setTimeout'] })
 		companionModule.config.model = 'classic'
 		companionModule.updateActions()
 		// Reset the state before each test
@@ -397,7 +399,6 @@ describe('Companion AJA HELO Module', { concurrency: 1 }, () => {
 				{ id: '3', label: 'Template' },
 			]) {
 				test(`action: Select Layout and Recall/Load Template - ${label} - ${label2}`, async (t) => {
-					t.mock.timers.enable() // Enable fake timers for this test
 					await companionModule.selectLayoutAndDo({ options: { layout: id, action: id2 } })
 					assert.strictEqual(state[`eParamID_LayoutSelector`], parseInt(id))
 				})

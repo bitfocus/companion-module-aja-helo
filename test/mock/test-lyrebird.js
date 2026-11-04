@@ -76,6 +76,8 @@ describe('Mock AJA HELO', { concurrency: 1 }, () => {
 	})
 
 	beforeEach(() => {
+		// Keep device reset and delayed-action timers inside each test.
+		mock.timers.enable({ apis: ['setTimeout'] })
 		// Reset the state before each test
 		Object.assign(state, DefaultState)
 	})
@@ -294,13 +296,12 @@ describe('Mock AJA HELO', { concurrency: 1 }, () => {
 		// Register Recall
 		testBounds('eParamID_RegisterRecall', 0, 20)
 		test('SET eParamID_RegisterRecall configures eParamID_RegisterRecallResult', async (t) => {
-			t.mock.timers.enable() // Enable fake timers for this test
 			const response = await request('/config?action=set&paramid=eParamID_RegisterRecall&value=1')
 			assert.strictEqual(response.statusCode, 200)
 			assert.strictEqual(state.eParamID_RegisterRecall, 1)
 			assert.strictEqual(state.eParamID_RegisterRecallResult, 2)
 			// Wait for the simulated delay to complete
-			t.mock.timers.tick(7000) // Fast-forward time by 7 seconds
+			mock.timers.tick(7000) // Fast-forward time by 7 seconds
 			assert.strictEqual(state.eParamID_RegisterRecallResult, 0) // Should reset after delay
 		})
 
@@ -330,12 +331,11 @@ describe('Mock AJA HELO', { concurrency: 1 }, () => {
 		// Layout Command
 		testBounds('eParamID_LayoutCommand', 0, 3)
 		test('SET eParamID_LayoutCommand resets after time', async (t) => {
-			t.mock.timers.enable() // Enable fake timers for this test
 			const response = await request('/config?action=set&paramid=eParamID_LayoutCommand&value=1')
 			assert.strictEqual(response.statusCode, 200)
 			assert.strictEqual(state.eParamID_LayoutCommand, 1)
 			// Wait for the simulated delay to complete
-			t.mock.timers.tick(2500) // Fast-forward time by 2.5 seconds
+			mock.timers.tick(2500) // Fast-forward time by 2.5 seconds
 			assert.strictEqual(state.eParamID_LayoutCommand, 0) // Should reset after delay
 		})
 
